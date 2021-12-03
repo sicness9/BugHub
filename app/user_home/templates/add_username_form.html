@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block title %} Add username form {% endblock %}
+{% block content %}
+<h1> Choose your username </h1>
+<form action="/username_add" method = "POST">
+    <div class="container w-50 form-group mx-auto pt-5">
+        <p style="color:white">Enter Username <input type ="text" placeholder="Username" class="form-control" name="username" /></p>
+        <p><input class="btn btn-lg btn-secondary fw-bold border-white bg-white text-black" type = "submit" value = "Submit" /></p>
+    </div>
+</form>
+{% endblock %}

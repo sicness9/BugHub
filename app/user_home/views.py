@@ -6,16 +6,30 @@ from flask_cors import cross_origin
 
 from app.utils import requires_auth
 from app import db
+from app.database.models import User
 from . import user_home
 
 
 # user home page
-@user_home.route("/", methods=['GET'])
+@user_home.route("/user_home", methods=['GET', 'POST'])
 @cross_origin(headers=["Content Type", "Authorization"])
 @requires_auth
 def user_home_page():
-    return render_template('user_home.html', userinfo=session['profile'],
-                           userinfo_pretty=json.dumps(session['jwt_payload'], indent=4))
+    return render_template('user_home.html', userinfo=session['profile'])
+
+
+# work in progress
+@user_home.route("/profile", methods=["GET", "POST"])
+@cross_origin(headers=["Content Type", "Authorization"])
+@requires_auth
+def user_profile():
+    user = session['profile']
+    current_user = User.query.filter_by(email=user.name)
+    for info in current_user:
+        if User.username or User.first_name or User.last_name is None:
+            render_template('user_profile_add_form.html', userinfo=session['profile'])
+
+    return render_template("user_profile.html", userinfo=session['profile'])
 
 
 # start add username process with this form

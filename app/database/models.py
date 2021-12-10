@@ -13,9 +13,9 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, index=True)
     username = db.Column(db.String, unique=True, nullable=True)
-    first_name = db.Column(db.String)
-    last_name = db.Column(db.String)
-    # email = db.Column(db.String, unique=True, index=True)
+    first_name = db.Column(db.String, nullable=True)
+    last_name = db.Column(db.String, nullable=True)
+    email = db.Column(db.String, unique=True, index=True)
     # email_verified = db.Column(db.Boolean, default=False)
     # password = db.Column(db.String)
     # is_active = db.Column(db.Boolean)

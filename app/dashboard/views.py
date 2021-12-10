@@ -8,7 +8,7 @@ from app.utils import requires_auth
 from . import dashboard
 
 
-# user dashboard
+# dashboard
 @dashboard.route('/dashboard')
 @requires_auth
 def dashboard():

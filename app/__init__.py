@@ -26,9 +26,9 @@ def create_app():
     from .user_home import user_home
 
     app.register_blueprint(main_page, url_prefix='/')
-    app.register_blueprint(auth, urlprefix='/auth')
-    app.register_blueprint(dashboard, urlprefix='/dashboard')
-    app.register_blueprint(user_home, urlprefix='/user')
+    app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(dashboard, url_prefix='/dashboard')
+    app.register_blueprint(user_home, url_prefix='/users')
 
     from app.database.models import User, Ticket, Team
 

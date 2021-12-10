@@ -21,8 +21,15 @@ def requires_auth(f):
         if 'profile' not in session:
             # redirect to login page
             return redirect('/')
-        # return f(*args, **kwargs)
+        return f(*args, **kwargs)
 
+    return decorated
+
+
+# api wrapper
+def api_requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
         token = get_token_auth_header()
         jsonurl = urlopen("https://" + AUTH0_DOMAIN + "/.well-known/jwks.json")
         jwks = json.loads(jsonurl.read())
@@ -37,35 +44,35 @@ def requires_auth(f):
                     "n": key["n"],
                     "e": key["e"]
                 }
-        if rsa_key:
-            try:
-                payload = jwt.decode(
-                    token,
-                    rsa_key,
-                    algorithms=ALGORITHMS,
-                    audience=API_AUDIENCE,
-                    issuer="https://" + AUTH0_DOMAIN + "/"
-                )
-            except jwt.ExpiredSignatureError:
-                raise AuthError({"code": "token_expired",
-                                 "description": "token is expired"}, 401)
-            except jwt.JWTClaimsError:
-                raise AuthError({"code": "invalid_claims",
-                                 "description":
-                                     "incorrect claims,"
-                                     "please check the audience and issuer"}, 401)
-            except Exception:
-                raise AuthError({"code": "invalid_header",
-                                 "description":
-                                     "Unable to parse authentication"
-                                     " token."}, 401)
+            if rsa_key:
+                try:
+                    payload = jwt.decode(
+                        token,
+                        rsa_key,
+                        algorithms=ALGORITHMS,
+                        audience=API_AUDIENCE,
+                        issuer="https://" + AUTH0_DOMAIN + "/"
+                    )
 
-            _request_ctx_stack.top.current_user = payload
-            return f(*args, **kwargs)
-        raise AuthError({"code": "invalid_header",
-                         "description": "Unable to find appropriate key"}, 401)
+                except jwt.ExpiredSignatureError:
+                    raise AuthError({"code": "token_expired",
+                                     "description": "token is expired"}, 401)
+                except jwt.JWTClaimsError:
+                    raise AuthError({"code": "invalid_claims",
+                                     "description":
+                                         "incorrect claims,"
+                                         "please check the audience and issuer"}, 401)
+                except Exception:
+                    raise AuthError({"code": "invalid_header",
+                                     "description":
+                                         "Unable to parse authentication"
+                                         " token."}, 401)
 
-    return decorated
+                _request_ctx_stack.top.current_user = payload
+                return f(*args, **kwargs)
+            raise AuthError({"code": "invalid_header",
+                             "description": "Unable to find appropriate key"}, 401)
+        return decorated
 
 
 # error handler

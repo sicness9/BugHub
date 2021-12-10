@@ -3,13 +3,15 @@
 
 import os
 
-from flask import session, redirect, url_for, jsonify
+from flask import session, redirect, url_for, jsonify, flash
 from authlib.integrations.flask_client import OAuth
 from six.moves.urllib.parse import urlencode
 
 from main import app
+from app import db
 from . import auth
 from ..utils import AuthError
+from app.database.models import User
 
 oauth = OAuth(app)
 
@@ -49,12 +51,22 @@ def callback_handling():
         'name': userinfo['name'],
         'picture': userinfo['picture']
     }
-    return redirect('/dashboard')
+
+    # check if email exists in db
+    user = User.query.filter_by(email=userinfo['name']).first()
+    # if email does not exist, add to User table
+    if user is None:
+        new_user = User(email=userinfo['name'])
+        db.session.add(new_user)
+        db.session.commit()
+
+    return redirect('/main')
 
 
 @auth.route('/login')
 def login():
-    return auth0.authorize_redirect(redirect_uri='http://127.0.0.1:5000/main')
+    return auth0.authorize_redirect(redirect_uri=url_for('auth.callback_handling', _external=True),
+                                    audience=os.getenv('API_AUDIENCE'))
 
 
 @auth.route('/logout')

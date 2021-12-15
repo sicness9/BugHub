@@ -1,0 +1,21 @@
+{% extends "user_home/base.html" %} {% block title %} User Profile missing first name {% endblock %}
+{% block content %}
+<div>
+  <h2>Looks like we're still missing your first name</h2>
+
+      <div class="container align-center col-md-2 col-lg-4">
+        <form action="{{ url_for('user_home.add_profile') }}" method="POST">
+          <div class="row g-3">
+
+            <div class="col-sm-6">
+              <label for="first_name" class="form-label">First name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name">
+            </div>
+
+            </div>
+          <div class="p-5"><p><button type="submit" class="btn btn-primary btn-lg" value="Submit">Submit</button></p></div>
+        </form>
+      </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "user_home/base.html" %} {% block title %} User Home Page {% endblock %}
+
+{% block nav %}
+<div class="row">
+        <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+            <a href="/" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-4">BugHub</span>
+            </a>
+            <hr>
+              <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+            <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('main_page.main') }}" class="nav-link text-white" aria-current="page">
+                            Boards
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user_home.user_home_page') }}" class="nav-link active">
+                            User home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user_home.user_profile') }}" class="nav-link text-white">
+                            My profile
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            My tickets
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user_home.my_team') }}" class="nav-link text-white">
+                            My team
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong> {{ userinfo.name }} </strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">User Home page (WIP)</h1>
+</div>
+{% endblock %}

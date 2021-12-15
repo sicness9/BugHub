@@ -3,7 +3,7 @@
 
 import os
 
-from flask import session, redirect, url_for, jsonify, flash
+from flask import session, redirect, url_for, jsonify
 from authlib.integrations.flask_client import OAuth
 from six.moves.urllib.parse import urlencode
 
@@ -38,7 +38,7 @@ def handle_auth_error(ex):
 
 
 # handle callback
-@auth.route('/callback')
+@auth.route('/callback', methods=['GET', 'POST'])
 def callback_handling():
     auth0.authorize_access_token()
     resp = auth0.get('userinfo')
@@ -60,16 +60,16 @@ def callback_handling():
         db.session.add(new_user)
         db.session.commit()
 
-    return redirect('/main')
+    return redirect(url_for('user_home.init_profile'))
 
 
-@auth.route('/login')
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     return auth0.authorize_redirect(redirect_uri=url_for('auth.callback_handling', _external=True),
                                     audience=os.getenv('API_AUDIENCE'))
 
 
-@auth.route('/logout')
+@auth.route('/logout', methods=['GET', 'POST'])
 def logout():
     # clear the session stored data
     session.clear()

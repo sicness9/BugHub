@@ -1,0 +1,20 @@
+{% extends "user_home/base.html" %} {% block title %} User Profile missing last name {% endblock %}
+{% block content %}
+<div>
+  <h1>Looks like we need your last name still</h1>
+
+      <div class="container align-center col-md-2 col-lg-4">
+        <form action="{{ url_for('user_home.add_profile') }}" method="POST">
+          <div class="row g-3">
+
+            <div class="col-sm-6">
+              <label for="last_name" class="form-label">Last name</label>
+              <input type="text" class="form-control" id="last_name" name="last_name">
+            </div>
+
+            </div>
+          <div class="p-5"><p><button type="submit" class="btn btn-primary btn-lg" value="Submit">Submit</button></p></div>
+        </form>
+      </div>
+</div>
+{% endblock %}

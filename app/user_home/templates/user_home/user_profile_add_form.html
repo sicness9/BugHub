@@ -1,0 +1,31 @@
+{% extends "user_home/base.html" %} {% block title %} User Profile Add {% endblock %}
+{% block content %}
+<div>
+  <h1>Hello {{ userinfo.name }}</h1>
+  <h2>Tell us more about yourself</h2>
+
+
+      <div class="container align-center col-md-2 col-lg-4">
+        <form action="{{ url_for('user_home.add_profile') }}" method="POST">
+          <div class="row g-3">
+
+            <div class="col-sm-6">
+              <label for="first_name" class="form-label">First name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name">
+            </div>
+
+            <div class="col-sm-6">
+              <label for="last_name" class="form-label">Last name</label>
+              <input type="text" class="form-control" id="last_name" name="last_name">
+            </div>
+
+            <div class="col-12">
+              <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username">
+              </div>
+            </div>
+          <div class="p-5"><p><button type="submit" class="btn btn-primary btn-lg" value="Submit">Submit</button></p></div>
+        </form>
+      </div>
+</div>
+{% endblock %}

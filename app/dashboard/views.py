@@ -12,5 +12,5 @@ from . import dashboard
 @dashboard.route('/dashboard')
 @requires_auth
 def dashboard():
-    return render_template('dashboard.html', userinfo=session['profile'],
+    return render_template('dashboard/dashboard.html', userinfo=session['profile'],
                            userinfo_pretty=json.dumps(session['jwt_payload'], indent=4))

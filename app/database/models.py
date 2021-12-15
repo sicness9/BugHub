@@ -2,7 +2,6 @@
 
 from .. import db
 
-
 '''
 user models
 '''
@@ -43,10 +42,12 @@ class Ticket(db.Model):
     title = db.Column(db.String, index=True)
     ticket_description = db.Column(db.String, nullable=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
     # owner_id = relationship("User", backref="tickets")
 
     def __repr__(self):
         return f"{self.status} - {self.bucket} - {self.title} - {self.ticket_description} - {self.owner_id}"
+
 
 '''
 team models
@@ -59,6 +60,7 @@ class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True, index=True)
     team_name = db.Column(db.String, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
     # user_id = relationship("User", backref="teams")
 
     def __repr__(self):

@@ -20,15 +20,17 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
-    from .main_page import main_page
     from .auth import auth
+    from .main_page import main_page
     from .dashboard import dashboard
     from .user_home import user_home
+    from .teams import teams
 
-    app.register_blueprint(main_page, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(main_page, url_prefix='/')
     app.register_blueprint(dashboard, url_prefix='/dashboard')
     app.register_blueprint(user_home, url_prefix='/users')
+    app.register_blueprint(teams, url_prefix='/teams')
 
     from app.database.models import User, Ticket, Team
 

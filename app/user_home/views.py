@@ -7,7 +7,7 @@ from flask_cors import cross_origin
 
 from app.utils import requires_auth
 from app import db
-from app.database.models import User, Team
+from app.database.models import User, Team, Ticket
 from . import user_home
 
 
@@ -16,10 +16,32 @@ from . import user_home
 @cross_origin(headers=["Content Type", "Authorization"])
 @requires_auth
 def user_home_page():
-    return render_template('user_home/user_home.html', userinfo=session['profile'])
+    current_user = session['profile']
+    user = User.query.filter_by(email=current_user['name']).first()
+    current_team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.all()
+
+    # check if username, first_name or last_name is missing in DB.
+    # If yes, provide screen so they can add the missing information
+
+    if user.username is None:
+        return render_template('user_home/user_profile_missing_username.html',
+                               userinfo=current_user, user=user, all_tickets=all_tickets)
+    elif user.first_name is None:
+        return render_template('user_home/user_profile_missing_first_name.html',
+                               userinfo=current_user, user=user, all_tickets=all_tickets)
+    elif user.last_name is None:
+        return render_template('user_home/user_profile_missing_last_name.html',
+                               userinfo=current_user, user=user, all_tickets=all_tickets)
+
+    return render_template("user_home/user_home.html", userinfo=current_user, user=user,
+                           current_team=current_team, all_tickets=all_tickets)
+
+    # return render_template('user_home/user_home.html', userinfo=current_user, user=user)
 
 
-# user profile page
+'''# user profile page
 @user_home.route("/profile", methods=["GET", "POST"])
 @cross_origin(headers=["Content Type", "Authorization"])
 @requires_auth
@@ -42,7 +64,7 @@ def user_profile():
                                userinfo=current_user, current_user=user)
 
     return render_template("user_home/user_profile.html", userinfo=current_user, current_user=user,
-                           current_team=current_team)
+                           current_team=current_team)'''
 
 
 # after initial sign-in or sign-up ask for profile information
@@ -55,7 +77,7 @@ def init_profile():
 
     # if account has an existing username, redirect to main profile page and avoid add form
     if current_user.username is not None:
-        return redirect(url_for('user_home.user_profile'))
+        return redirect(url_for('user_home.user_home_page'))
 
     return render_template('user_home/user_profile_add_form.html',
                            userinfo=session['profile'], current_user=current_user)
@@ -167,7 +189,7 @@ def update_username():
         else:
             user.username = request.form.get('username')
             db.session.commit()
-            return redirect(url_for('user_home.user_profile'))
+            return redirect(url_for('user_home.user_home_page'))
 
     return render_template('user_home/update_username.html', userinfo=current_user, user=user)
 
@@ -204,7 +226,7 @@ def update_first_name():
         else:
             user.first_name = request.form.get('first_name')
             db.session.commit()
-            return redirect(url_for('user_home.user_profile'))
+            return redirect(url_for('user_home.user_home_page'))
 
     return render_template('user_home/update_first_name.html', userinfo=current_user, form_data=form_data, user=user)
 
@@ -240,36 +262,45 @@ def update_last_name():
         else:
             user.last_name = request.form.get('last_name')
             db.session.commit()
-            return redirect(url_for('user_home.user_profile'))
+            return redirect(url_for('user_home.user_home_page'))
 
     return render_template('user_home/update_last_name.html', userinfo=current_user, form_data=form_data, user=user)
 
 
-# delete or unlink account
-
-
 # team view page
-@user_home.route("/join_team", methods=['GET', 'POST'])
+@user_home.route("/my_team", methods=['GET', 'POST'])
 @cross_origin(headers=["Content Type", "Authorization"])
 @requires_auth
 def my_team():
     current_user = session['profile']
 
     user = User.query.filter_by(email=current_user['name']).first()
-    current_team = Team.query.filter_by(id=current_user.team_id).first()
+    all_tickets = Ticket.query.all()
 
+    # if no team joined yet, have the user join one first
     if user.team_id is None:
-        return render_template('user_home/join_team.html', userinfo=current_user)
+        return render_template('user_home/join_team.html', userinfo=current_user, user=user, all_tickets=all_tickets)
 
-    return render_template('user_home/my_team.html', userinfo=current_user, user=user)
+    current_team = Team.query.filter_by(id=user.team_id).first()
+    team_users = User.query.filter_by(team_id=current_team.id).all()
 
+    # send to developer team page
+    if current_team.team_name == 'Developer':
+        return render_template('user_home/my_team_developer.html', userinfo=current_user, user=user,
+                               team_users=team_users,all_tickets=all_tickets)
+    # send to QA team page
+    if current_team.team_name == 'Quality Assurance':
+        return render_template('user_home/my_team_qa.html', userinfo=current_user, user=user, team_users=team_users,
+                               all_tickets=all_tickets)
+    # send to support team page
+    if current_team.team_name == 'Support':
+        return render_template('user_home/my_team_support.html', userinfo=current_user, user=user,
+                               team_users=team_users, all_tickets=all_tickets)
+    # send to engineer team page
+    if current_team.team_name == 'Engineer':
+        return render_template('user_home/my_team_engineer.html', userinfo=current_user, user=user,
+                               team_users=team_users, all_tickets=all_tickets)
 
-'''# join a team
-@user_home.route("/join_team", methods=['GET', 'POST'])
-@cross_origin(headers=["Content Type", "Authorization"])
-@requires_auth
-def join_team():
-'''
 
 # User ticket view
 @user_home.route("/my_tickets", methods=['GET', 'POST'])
@@ -277,4 +308,9 @@ def join_team():
 @requires_auth
 def my_tickets():
     current_user = session['profile']
-    return render_template('user_home/my_tickets.html', userinfo=current_user)
+
+    user = User.query.filter_by(email=current_user['name']).first()
+    tickets = Ticket.query.filter_by(owner_id=user.id).all()
+    all_tickets = Ticket.query.all()
+
+    return render_template('user_home/my_tickets.html', userinfo=current_user, tickets=tickets, all_tickets=all_tickets)

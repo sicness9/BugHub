@@ -1,4 +1,61 @@
-{% extends "user_home/base.html" %} {% block title %} User Profile Add {% endblock %}
+{% extends "user_home/base.html" %} {% block title %} Profile Add Form {% endblock %}
+
+{% block nav %}
+<div class="row">
+        <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+            <a href="{{ url_for('main_page.main')}}" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-4">BugHub</span>
+            </a>
+            <hr>
+              <form action="/bugs/browse/<id>" method="POST">
+                    <div class="input-group">
+                        <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                        <datalist id="alltickets">
+                            {% for ticket in all_tickets %}
+                            <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                    </div>
+                </form>
+            <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('main_page.main') }}" class="nav-link text-white" aria-current="page">
+                            Main Page
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user_home.user_home_page') }}" class="nav-link text-white">
+                            User home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user_home.my_tickets') }}" class="nav-link text-white">
+                            My tickets
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('user_home.my_team') }}" class="nav-link text-white">
+                            My team
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong> {{ userinfo.name }} </strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+        </div>
+</div>
+{% endblock %}
+
 {% block content %}
 <div>
   <h1>Hello {{ userinfo.name }}</h1>

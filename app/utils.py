@@ -5,7 +5,7 @@ import json
 from functools import wraps
 from six.moves.urllib_request import urlopen
 
-from flask import session, redirect, jsonify, request, _request_ctx_stack
+from flask import session, redirect, request, _request_ctx_stack
 from jose import jwt
 
 

@@ -5,6 +5,7 @@ from flask_cors import cross_origin
 
 from . import main_page
 from app.utils import requires_auth
+from app.database.models import Ticket
 
 
 # main page but redirect to log in first
@@ -19,4 +20,6 @@ def main_redirect():
 @cross_origin(headers=["Content Type", "Authorization"])
 @requires_auth
 def main():
-    return render_template('main_page/main_page.html', userinfo=session['profile'])
+
+    all_tickets = Ticket.query.all()
+    return render_template('main_page/main_page.html', userinfo=session['profile'], all_tickets=all_tickets)

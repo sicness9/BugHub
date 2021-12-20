@@ -2,31 +2,41 @@
 {% block nav %}
 <div class="row">
         <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
-            <a href="/" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <a class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none" href="/">
               <span class="fs-4">BugHub</span>
             </a>
             <hr>
-              <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+              <form action="/bugs/browse/<id>" method="POST">
+                    <div class="input-group">
+                        <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                        <datalist id="alltickets">
+                            {% for ticket in all_tickets %}
+                            <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                    </div>
+                </form>
             <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{{ url_for('teams.team_home_page') }}" class="nav-link active" aria-current="page">
+                        <a aria-current="page" class="nav-link active" href="{{ url_for('teams.team_home_page') }}">
                             Teams
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ url_for('main_page.main') }}" class="nav-link text-white" aria-current="page">
+                        <a aria-current="page" class="nav-link text-white" href="{{ url_for('main_page.main') }}">
                             Boards
                         </a>
                     </li>
                 </ul>
                 <hr>
                 <div class="dropdown">
-                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <a aria-expanded="false" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownUser1">
+                        <img alt="" class="rounded-circle me-2" height="32" src="{{ userinfo.picture }}" width="32">
                         <strong> {{ userinfo.name }} </strong>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                    <ul aria-labelledby="dropdownUser1" class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
                         <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
                     </ul>
@@ -36,106 +46,158 @@
 {% endblock %}
 
 {% block content %}
-<h2> Here are a list of teams to choose from</h2>
-<hr>
 
-<!-- Developer -->
-<div class="container py-4">
+<div class="container-fluid mx-auto ">
 
-   <div class="p-5 mb-4 bg-success text-white rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Developers Team</h1>
-          <hr>
-          <p>There are currently {{ dev_members }} developers on BugHub</p>
-          <button type="button" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#joindeveloper">
-              Join
-          </button>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2> Here are a list of teams to choose from</h2>
+    </div>
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="container-fluid">
+
+    <!-- Developer -->
+    <div class="container py-4">
+
+       <div class="p-5 mb-4 bg-success text-white rounded-3">
+          <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Developers Team</h1>
+              <hr>
+              <p>There are currently {{ dev_members }} developers on BugHub</p>
+              <button class="btn btn-dark btn-lg" data-bs-target="#joindeveloper" data-bs-toggle="modal" type="button">
+                  Join
+              </button>
+          </div>
+        </div>
+
+        <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="joindeveloper" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">Join the developer team?</h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to join the developer team?
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+            <a class="btn btn-primary" href="{{url_for('teams.developer_join')}}" type="button">Yes</a>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Modal -->
-<div class="modal fade" id="joindeveloper" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Join the developer team?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to join the developer team?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a type="button" href="{{url_for('teams.developer_join')}}" class="btn btn-primary">Yes</a>
-      </div>
-    </div>
-  </div>
-</div>
-
-</div>
-
-
-<!-- Quality Assurance -->
-<div class="container py-4">
-
-   <div class="p-5 mb-4 bg-danger text-white rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Quality Assurance Team</h1>
-          <hr>
-          <p>There are currently {{ qa_members }} QA members on BugHub</p>
-        <button type="button" class="btn btn-dark btn-lg" data-bs-toggle="modal" data-bs-target="#joinQA">
-              Join
-          </button>
-      </div>
     </div>
 
-    <!-- Modal -->
-<div class="modal fade" id="joinQA" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticQA">Join the QA team?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to join the Quality Assurance team?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a type="button" href="{{url_for('teams.qa_join')}}" class="btn btn-primary">Yes</a>
+
+    <!-- Quality Assurance -->
+    <div class="container py-4">
+
+       <div class="p-5 mb-4 bg-danger text-white rounded-3">
+          <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Quality Assurance Team</h1>
+              <hr>
+              <p>There are currently {{ qa_members }} QA members on BugHub</p>
+            <button class="btn btn-dark btn-lg" data-bs-target="#joinQA" data-bs-toggle="modal" type="button">
+                  Join
+              </button>
+          </div>
+        </div>
+
+        <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="joinQA" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticQA">Join the QA team?</h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to join the Quality Assurance team?
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+            <a class="btn btn-primary" href="{{url_for('teams.qa_join')}}" type="button">Yes</a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-</div>
-
-
-<!-- Support -->
-<div class="container py-4">
-
-   <div class="p-5 mb-4 bg-warning text-white rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Support Team</h1>
-          <hr>
-          <p>There are currently {{ support_members }} support team members on BugHub</p>
-        <a class="btn btn-dark btn-lg" href="{{ url_for('teams.team_home_page') }}" type="button">Get Started</a>
-      </div>
     </div>
 
-</div>
 
+    <!-- Support -->
+    <div class="container py-4">
 
-<!-- Engineer-->
-<div class="container py-4">
+       <div class="p-5 mb-4 bg-warning text-white rounded-3">
+          <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Support Team</h1>
+              <hr>
+              <p>There are currently {{ support_members }} support team members on BugHub</p>
+            <button class="btn btn-dark btn-lg" data-bs-target="#joinsupport" data-bs-toggle="modal" type="button">
+                  Join
+              </button>
+          </div>
+        </div>
 
-   <div class="p-5 mb-4 bg-info text-white rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Engineering Team</h1>
-          <hr>
-          <p>There are currently {{ eng_members }} engineers on BugHub</p>
-        <a class="btn btn-dark btn-lg" href="{{ url_for('teams.team_home_page') }}" type="button">Get Started</a>
+        <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="joinsupport" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticsupport">Join the Support team?</h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to join the Support team?
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+            <a class="btn btn-primary" href="{{url_for('teams.support_join')}}" type="button">Yes</a>
+          </div>
+        </div>
       </div>
     </div>
 
+    </div>
+
+
+    <!-- Engineer-->
+    <div class="container py-4">
+
+       <div class="p-5 mb-4 bg-info text-white rounded-3">
+          <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Engineering Team</h1>
+              <hr>
+              <p>There are currently {{ eng_members }} engineers on BugHub</p>
+            <button class="btn btn-dark btn-lg" data-bs-target="#joinengineer" data-bs-toggle="modal" type="button">
+                  Join
+              </button>
+          </div>
+        </div>
+
+        <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="staticBackdropLabel" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="joinengineer" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticengineer">Join the Engineering team?</h5>
+            <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to join the Engineering team?
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Close</button>
+            <a class="btn btn-primary" href="{{url_for('teams.engineer_join')}}" type="button">Yes</a>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
+
+    </div>
+</div>
+
 {% endblock %}

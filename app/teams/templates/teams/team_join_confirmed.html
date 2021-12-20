@@ -1,5 +1,4 @@
-{% extends "user_home/base.html" %} {% block title %} User Profile {% endblock %}
-
+{% extends "teams/base.html" %}{% block title %} Joined team {% endblock %}
 {% block nav %}
 <div class="row">
         <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
@@ -7,7 +6,17 @@
               <span class="fs-4">BugHub</span>
             </a>
             <hr>
-              <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+              <form action="/bugs/browse/<id>" method="POST">
+                    <div class="input-group">
+                        <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                        <datalist id="alltickets">
+                            {% for ticket in all_tickets %}
+                            <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                    </div>
+              </form>
             <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
@@ -15,26 +24,7 @@
                             Boards
                         </a>
                     </li>
-                    <li>
-                        <a href="{{ url_for('user_home.user_home_page') }}" class="nav-link text-white">
-                            User home
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('user_home.user_profile') }}" class="nav-link text-white">
-                            My profile
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('user_home.my_tickets') }}" class="nav-link text-white">
-                            My tickets
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('user_home.my_team') }}" class="nav-link active">
-                            My team
-                        </a>
-                    </li>
+
                 </ul>
                 <hr>
                 <div class="dropdown">
@@ -48,17 +38,9 @@
                     </ul>
                 </div>
         </div>
-</div>
+    </div>
 {% endblock %}
 
 {% block content %}
-<h2> Welcome {{ user.first_name }}</h2>
-<hr>
-
-<div class="container-fluid mx-auto">
-
-
-
-</div>
-
+<h2>You have successfully joined the {{ current_team.team_name }} team!</h2>
 {% endblock %}

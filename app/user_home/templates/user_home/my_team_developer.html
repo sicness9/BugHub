@@ -1,4 +1,4 @@
-{% extends "user_home/base.html" %} {% block title %} My Tickets {% endblock %}
+{% extends "user_home/base.html" %} {% block title %} My Team {% endblock %}
 
 {% block nav %}
 <div class="row">
@@ -31,12 +31,12 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url_for('user_home.my_tickets') }}" class="nav-link active">
+                        <a href="{{ url_for('user_home.my_tickets') }}" class="nav-link text-white">
                             My tickets
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url_for('user_home.my_team') }}" class="nav-link text-white">
+                        <a href="{{ url_for('user_home.my_team') }}" class="nav-link active">
                             My team
                         </a>
                     </li>
@@ -57,36 +57,68 @@
 {% endblock %}
 
 {% block content %}
-<h2> My Tickets </h2>
+
+    <div class="d-grid justify-content-md-end">
+            <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#switchTeam">
+                  Switch team
+              </button>
+
+       <!-- Modal -->
+        <div class="modal fade" id="switchTeam" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticTeam">Switch Team?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                Are you sure you want to switch teams?
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a type="submit" class="btn btn-danger" href="{{ url_for('teams.team_home_page') }}">Yes</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+<h2> Developers </h2>
 <hr>
 
 <div class="container-fluid mx-auto">
-    <div class="p-3 mb-2 bg-dark text-white rounded-3">
-      <div class="container-fluid py-2">
-          <div class="table-responsive-lg mx-auto pt-2">
+<div class="p-3 mb-2 bg-success text-white rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Developers Team</h1>
+          <hr>
+          <p>Your fellow developers</p>
+          <hr>
+          <div class="table-responsive-lg mx-auto pt-5">
             <table class="table table-striped table-dark">
               <thead>
                 <tr>
-                  <th scope="col">Ticket #</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Ticket Type</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
                 </tr>
               </thead>
               <tbody>
-              {% for ticket in tickets %}
+              {% for user in team_users %}
                 <tr>
-                    <td scope="row">{{ ticket.id }}</td>
-                    <td scope="row">{{ ticket.title }} </td>
-                    <td scope="row">{{ ticket.status }} </td>
-                    <td scope="row">{{ ticket.bucket }} </td>
+                    <td scope="row">{{ user.first_name }} {{ user.last_name }}</td>
+                    <td scope="row">{{ user.email }} </td>
                 </tr>
               {% endfor %}
               </tbody>
             </table>
           </div>
+
       </div>
     </div>
+
+
 </div>
 
 {% endblock %}

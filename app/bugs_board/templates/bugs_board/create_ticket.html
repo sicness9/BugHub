@@ -1,0 +1,90 @@
+{% extends "bugs_board/base.html" %} {% block title %} Create a ticket {% endblock %}
+
+{% block nav %}
+<div class="row">
+        <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+            <a href="{{ url_for('main_page.main')}}" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-4">BugHub</span>
+            </a>
+            <hr>
+              <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+            <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('main_page.main') }}" class="nav-link text-white" aria-current="page">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link text-white" aria-current="page">
+                            Bugs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('bugs_board.create_ticket') }}" class="nav-link active">
+                            Create a ticket
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong> {{ userinfo.name }} </strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Create a ticket</h1>
+</div>
+
+<form action="{{ url_for('bugs_board.create_ticket') }}" method="POST">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" class="form-control" id="title" name="title">
+    </div>
+
+    <div class="row mb-3">
+      <div class="col">
+        <label for="status" class="form-label">Status</label>
+        <select id="status" name="status" class="form-select">
+          <option selected>Choose...</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Pending Triage">Pending Triage</option>
+          <option value="Closed">Closed</option>
+          <option value="To Do">To Do</option>
+        </select>
+      </div>
+
+      <div class="col">
+        <label for="bucket" class="form-label">Type of issue</label>
+        <select id="bucket" name="bucket" class="form-select" aria-label="Default select example">
+          <option selected>Choose...</option>
+          <option value="Bug">Bug</option>
+          <option value="Task">Task</option>
+          <option value="Feature Request">Feature Request</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="ticket_description" class="form-label">Description</label>
+      <textarea class="form-control" id="ticket_description" name="ticket_description" rows="15"></textarea>
+    </div>
+
+     <div class="d-grid gap-5 d-md-block">
+        <input class="btn btn-lg btn-secondary fw-bold border-white bg-primary text-white" type = "submit" value = "Submit" />
+        <a type="button" class="btn btn-lg btn-secondary fw-bold border-white bg-dark text-white" href="{{ url_for('bugs_board.bugs_main') }}">Cancel </a>
+    </div>
+</form>
+
+{% endblock %}

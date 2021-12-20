@@ -1,23 +1,28 @@
-{% extends "main_page/base.html" %} {% block title %} Main Page {% endblock %}
+{% extends "bugs_board/base.html" %} {% block title %} Main Page {% endblock %}
 
 {% block nav %}
 <div class="row">
         <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
-            <a href="/" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <a href="{{ url_for('main_page.main')}}" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
               <span class="fs-4">BugHub</span>
             </a>
             <hr>
-              <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+              <form action="/bugs/browse/<id>" method="POST">
+                    <div class="input-group">
+                        <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                        <datalist id="alltickets">
+                            {% for ticket in all_tickets %}
+                            <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                    </div>
+                </form>
             <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{{ url_for('main_page.main') }}" class="nav-link text-white" aria-current="page">
-                            Bugs
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('user_home.user_home_page') }}" class="nav-link text-white">
-                            Sprints
+                        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link text-white" aria-current="page">
+                            Boards
                         </a>
                     </li>
                 </ul>
@@ -37,6 +42,6 @@
 {% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">User Home page (WIP)</h1>
+  <h1 class="h2">Main Page (WIP)</h1>
 </div>
 {% endblock %}

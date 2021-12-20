@@ -1,0 +1,199 @@
+{% extends "bugs_board/base.html" %} {% block title %} Boards Dashboard {% endblock %}
+
+{% block nav %}
+<div class="row">
+        <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+            <a href="{{ url_for('main_page.main')}}" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-4">BugHub</span>
+            </a>
+            <hr>
+              <form action="/bugs/browse/<id>" method="POST">
+                    <div class="input-group">
+                        <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                        <datalist id="alltickets">
+                            {% for ticket in all_tickets %}
+                            <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                    </div>
+                </form>
+            <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link active" aria-current="page">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link text-white" aria-current="page">
+                            Bugs
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong> {{ userinfo.name }} </strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Boards dashboard (WIP)</h1>
+</div>
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="container-fluid">
+        <div class="row g-2 g-xxl-10 m-1">
+
+            <div class="col-md-2">
+                <div class="h-100 p-5 text-white bg-dark rounded-3">
+                    <h2>Open tickets</h2>
+                    <hr>
+                    <div class="container align-center">
+                    <h1>{{ open_tickets }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="h-100 p-5 bg-light border rounded-3">
+                    <h2>Closed tickets</h2>
+                    <hr>
+                    <div class="container align-center">
+                        <h1>{{ closed_tickets }}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="h-100 w-100 p-5 bg-light border rounded-3">
+                    <h2>Graph or stats of something WIP</h2>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row g-2 g-xxl-10 m-1">
+            <div class="col-lg-6">
+                <div class="h-100 p-5 text-white bg-success rounded-3">
+                    <h2>Developer Activity</h2>
+                    <h3># of members: {{ num_of_devs }}</h3>
+                    <h3 ># of tickets: {{ dev_tickets }} </h3>
+
+                    <hr>
+                    <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Member</th>
+                              <th scope="col"># of tickets</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for member in dev_team %}
+                            <tr>
+                                <td scope="row">{{ member.first_name }} {{ member.last_name }}</td>
+                                <td scope="row">{{ member.tickets }} </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="h-100 p-5 text-white bg-danger rounded-3">
+                    <h2>QA Activity</h2>
+                    <h3># of members: {{ num_of_qa }}</h3>
+                    <h3 ># of tickets: {{ qa_tickets }} </h3>
+                    <hr>
+                    <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Member</th>
+                              <th scope="col"># of tickets</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for member in qa_team %}
+                            <tr>
+                                <td scope="row">{{ member.first_name }} {{ member.last_name }}</td>
+                                <td scope="row">{{ member.tickets }} </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-2 g-xxl-10 m-1">
+            <div class="col-lg-6">
+                <div class="h-100 p-5 text-white bg-warning rounded-3">
+                    <h2>Support Activity</h2>
+                    <h3># of members: {{ num_of_support }}</h3>
+                    <h3 ># of tickets: {{ support_tickets }} </h3>
+                    <hr>
+                    <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Member</th>
+                              <th scope="col"># of tickets</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for member in support_team %}
+                            <tr>
+                                <td scope="row">{{ member.first_name }} {{ member.last_name }}</td>
+                                <td scope="row">{{ member.tickets }} </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="h-100 p-5 text-white bg-info rounded-3">
+                    <h2>Engineer Activity</h2>
+                    <h3># of members: {{ num_of_engineer }}</h3>
+                    <h3 ># of tickets: {{ eng_tickets }} </h3>
+                    <hr>
+                    <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Member</th>
+                              <th scope="col"># of tickets</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for member in engineer_team %}
+                            <tr>
+                                <td scope="row">{{ member.first_name }} {{ member.last_name }}</td>
+                                <td scope="row">{{ member.tickets }} </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

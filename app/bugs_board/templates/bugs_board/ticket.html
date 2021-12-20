@@ -1,0 +1,220 @@
+{% extends "bugs_board/base.html" %} {% block title %} Ticket view {% endblock %}
+
+{% block nav %}
+<div class="row">
+        <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+            <a href="{{ url_for('main_page.main')}}" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-4">BugHub</span>
+            </a>
+            <hr>
+            <form action="/bugs/browse/<id>" method="POST">
+                <div class="input-group">
+                    <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                    <datalist id="alltickets">
+                        {% for ticket in all_tickets %}
+                        <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                        {% endfor %}
+                    </datalist>
+                    <button type="submit" class="btn btn-outline-primary">search</button>
+                </div>
+            </form>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link text-white" aria-current="page">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link active" aria-current="page">
+                            Bugs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('bugs_board.create_ticket') }}" class="nav-link text-white">
+                            Create a ticket
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong> {{ userinfo.name }} </strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<form action="{{ url_for('bugs_board.delete_ticket', id=ticket.id) }}" method="POST">
+
+    <div class="d-grid justify-content-md-end">
+            <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteticket">
+                  Delete ticket
+              </button>
+
+       <!-- Modal -->
+        <div class="modal fade" id="deleteticket" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <h5 class="modal-title" id="staticticket">Delete ticket?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                Are you sure you want to delete this ticket {{ ticket.id }}?
+              </div>
+
+              <div class="modal-footer">
+                <input type="hidden" name="id" value="{{ ticket.id }}"/>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-danger" value="Yes"/>
+              </div>
+
+            </div>
+          </div>
+        </div>
+    </div>
+</form>
+
+
+<form action="/bugs/update/{{ticket.id}}" method="POST">
+    <div class="row">
+        <div class="col-6">
+            <h1>
+                <label class="form-label">Ticket #{{ ticket.id }}:</label>
+            </h1>
+        </div>
+
+        <div class="col-2">
+            <p><b>Created on:</b> {{ ticket.time_created }}</p>
+        </div>
+
+        <div class="col-2">
+            <p><b>Last update:</b> {{ ticket.time_updated }}</p>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col">
+            <input type="text" class="form-control form-control-lg" id="title" name="title" value="{{ ticket.title }}"/>
+        </div>
+    </div>
+
+<hr>
+
+
+    <div class="row mb-3">
+      <div class="col">
+        <label for="status" class="form-label">Status</label>
+        <select id="status" name="status" class="form-select">
+
+            {% if ticket.status == 'In Progress' %}
+                <option selected>In Progress</option>
+                <option value="Pending Triage">Pending Triage</option>
+                <option value="Closed">Closed</option>
+                <option value="To Do">To Do</option>
+            {% endif %}
+
+            {% if ticket.status == 'Pending Triage' %}
+                <option selected>Pending Triage</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Closed">Closed</option>
+                <option value="To Do">To Do</option>
+            {% endif %}
+
+            {% if ticket.status == 'Closed' %}
+                <option selected>Closed</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Pending Triage">Pending Triage</option>
+                <option value="To Do">To Do</option>
+            {% endif %}
+
+            {% if ticket.status == 'To Do' %}
+                <option selected>To Do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Pending Triage">Pending Triage</option>
+                <option value="Closed">Closed</option>
+            {% endif %}
+
+        </select>
+      </div>
+
+      <div class="col">
+        <label for="bucket" class="form-label">Type of issue</label>
+        <select id="bucket" name="bucket" class="form-select" aria-label="Default select example">
+            {% if ticket.bucket == 'bug' %}
+              <option selected>Bug</option>
+              <option value="Task">Task</option>
+              <option value="Feature Request">Feature Request</option>
+            {% endif %}
+
+            {% if ticket.bucket == 'Bug' %}
+              <option selected>Bug</option>
+              <option value="Task">Task</option>
+              <option value="Feature Request">Feature Request</option>
+            {% endif %}
+
+            {% if ticket.bucket == 'task' %}
+              <option selected>Task</option>
+              <option value="Bug">Bug</option>
+              <option value="Feature Request">Feature Request</option>
+            {% endif %}
+
+            {% if ticket.bucket == 'Task' %}
+              <option selected>Task</option>
+              <option value="Bug">Bug</option>
+              <option value="Feature Request">Feature Request</option>
+            {% endif %}
+
+            {% if ticket.bucket == 'feature_request' %}
+              <option selected>Feature Request</option>
+              <option value="Bug">Bug</option>
+              <option value="Task">Task</option>
+            {% endif %}
+
+            {% if ticket.bucket == 'Feature Request' %}
+              <option selected>Feature Request</option>
+              <option value="Bug">Bug</option>
+              <option value="Task">Task</option>
+            {% endif %}
+        </select>
+      </div>
+    </div>
+
+    <!-- Description section -->
+    <div class="mb-3">
+      <label for="ticket_description" class="form-label">Description</label>
+      <textarea class="form-control" id="ticket_description" name="ticket_description" rows="15">{{ ticket.ticket_description }}</textarea>
+    </div>
+
+    <div class="d-grid gap-5 d-md-block">
+        <input class="btn btn-lg btn-secondary fw-bold border-white bg-primary text-white" type="submit" value ="Save" />
+        <a type="button" class="btn btn-lg btn-secondary fw-bold border-white bg-dark text-white" href="{{ url_for('bugs_board.bugs_main') }}">Done </a>
+    </div>
+
+    <!-- Search and update ticket owner -->
+    <div class="col-md-3 m-1">
+        <label for="ticketOwners" class="form-label p-1"><b>Ticket Owner</b></label>
+        <div class="input-group">
+            <input class="form-control" list="ticketOwners" id="exampleDataList" name="owner_id" placeholder="{{ ticket_owner.first_name}} {{ ticket_owner.last_name }}">
+            <datalist id="ticketOwners">
+                {% for option in active_users %}
+                <option value="{{ option.id }} {{ option.first_name }} {{ option.last_name }}"> {{ option.first_name }} {{ option.last_name }} - {{ option.username }}</option>
+                {% endfor %}
+            </datalist>
+            <button type="submit" class="btn btn-outline-primary">Assign</button>
+        </div>
+    </div>
+
+</form>
+
+{% endblock %}

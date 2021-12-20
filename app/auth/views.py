@@ -2,6 +2,7 @@
 # primarily handled by auth0
 
 import os
+import datetime
 
 from flask import session, redirect, url_for, jsonify
 from authlib.integrations.flask_client import OAuth
@@ -56,7 +57,7 @@ def callback_handling():
     user = User.query.filter_by(email=userinfo['name']).first()
     # if email does not exist, add to User table
     if user is None:
-        new_user = User(email=userinfo['name'])
+        new_user = User(email=userinfo['name'], created_at=datetime.datetime.now())
         db.session.add(new_user)
         db.session.commit()
 

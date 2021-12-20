@@ -60,7 +60,10 @@ def developer_join():
     user.team_id = dev_team.id
     db.session.commit()
 
-    return render_template('teams/developer_join_confirm.html', userinfo=current_user)
+    # grab current team to pass to the next template
+    current_team = Team.query.filter_by(id=user.team_id).first()
+
+    return render_template('teams/team_join_confirmed.html', userinfo=current_user, current_team=current_team)
 
 
 # QA team page
@@ -76,4 +79,45 @@ def qa_join():
     user.team_id = dev_team.id
     db.session.commit()
 
-    return render_template('teams/qa_join_confirm.html', userinfo=current_user)
+    # grab current team to pass to the next template
+    current_team = Team.query.filter_by(id=user.team_id).first()
+
+    return render_template('teams/team_join_confirmed.html', userinfo=current_user, current_team=current_team)
+
+
+# support team page
+@teams.route("/support_join", methods=['GET', 'POST'])
+@cross_origin(headers=["Content Type", "Authorization"])
+@requires_auth
+def support_join():
+    current_user = session['profile']
+
+    user = User.query.filter_by(email=current_user['name']).first()
+    support_team = Team.query.filter_by(team_name='Support').first()
+
+    user.team_id = support_team.id
+    db.session.commit()
+
+    # grab current team to pass to the next template
+    current_team = Team.query.filter_by(id=user.team_id).first()
+
+    return render_template('teams/team_join_confirmed.html', userinfo=current_user, current_team=current_team)
+
+
+# engineer team page
+@teams.route("/engineer_join", methods=['GET', 'POST'])
+@cross_origin(headers=["Content Type", "Authorization"])
+@requires_auth
+def engineer_join():
+    current_user = session['profile']
+
+    user = User.query.filter_by(email=current_user['name']).first()
+    support_team = Team.query.filter_by(team_name='Engineer').first()
+
+    user.team_id = support_team.id
+    db.session.commit()
+
+    # grab current team to pass to the next template
+    current_team = Team.query.filter_by(id=user.team_id).first()
+
+    return render_template('teams/team_join_confirmed.html', userinfo=current_user, current_team=current_team)

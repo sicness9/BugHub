@@ -25,12 +25,14 @@ def create_app():
     from .dashboard import dashboard
     from .user_home import user_home
     from .teams import teams
+    from .bugs_board import bugs_board
 
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(main_page, url_prefix='/')
     app.register_blueprint(dashboard, url_prefix='/dashboard')
     app.register_blueprint(user_home, url_prefix='/users')
     app.register_blueprint(teams, url_prefix='/teams')
+    app.register_blueprint(bugs_board, url_prefix='/bugs')
 
     from app.database.models import User, Ticket, Team
 

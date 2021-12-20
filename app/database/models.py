@@ -1,4 +1,8 @@
 # database models
+import datetime
+
+from sqlalchemy.sql import func
+from sqlalchemy import DateTime, TIMESTAMP
 
 from .. import db
 
@@ -15,14 +19,12 @@ class User(db.Model):
     first_name = db.Column(db.String, nullable=True)
     last_name = db.Column(db.String, nullable=True)
     email = db.Column(db.String, unique=True, index=True)
-    # email_verified = db.Column(db.Boolean, default=False)
-    # password = db.Column(db.String)
-    # is_active = db.Column(db.Boolean)
-    ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'))
+    tickets = db.Column(db.Integer, default=0)
     team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
+    created_at = db.Column(TIMESTAMP(timezone=True), server_default=func.now())
 
     team = db.relationship("Team", foreign_keys=[team_id], backref="users")
-    ticket = db.relationship("Ticket", foreign_keys=[ticket_id], backref="users")
+    # ticket = db.relationship("Ticket", foreign_keys=[tickets], backref="users")
 
     def __repr__(self):
         return f"{self.username} - {self.first_name} - {self.last_name} - {self.email}"
@@ -42,6 +44,8 @@ class Ticket(db.Model):
     title = db.Column(db.String, index=True)
     ticket_description = db.Column(db.String, nullable=True)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    time_created = db.Column(DateTime(timezone=True), server_default=func.now())
+    time_updated = db.Column(DateTime(timezone=True), onupdate=func.now())
 
     # owner_id = relationship("User", backref="tickets")
 

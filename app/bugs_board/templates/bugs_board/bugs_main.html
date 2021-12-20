@@ -1,0 +1,206 @@
+{% extends "bugs_board/base.html" %} {% block title %} Bugs Main Page {% endblock %}
+
+{% block nav %}
+<div class="row">
+        <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+            <a href="{{ url_for('main_page.main')}}" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-4">BugHub</span>
+            </a>
+            <hr>
+                <form action="/bugs/browse/<id>" method="POST">
+                    <div class="input-group">
+                        <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                        <datalist id="alltickets">
+                            {% for ticket in all_tickets %}
+                            <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                    </div>
+                </form>
+                <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link text-white" aria-current="page">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link active" aria-current="page">
+                            Bugs
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('bugs_board.create_ticket') }}" class="nav-link text-white">
+                            Create a ticket
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong> {{ userinfo.name }} </strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<main class="d-flex flex-nowrap h-100 overflow-hidden">
+    <div class="container-fluid mx-auto ">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-2 border-bottom overflow-auto">
+          <h1 class="h2">Bugs Home page (WIP)</h1>
+        </div>
+
+        <div class="row d-flex flex-nowrap h-100">
+
+            <!-- Pending Triage tickets -->
+              <div class="col-md-3 p-1 overflow-auto">
+                <div class="h-100 p-3 text-primary bg-dark rounded-3 overflow-auto">
+                  <h2>Pending Triage</h2>
+                    <hr>
+
+                      <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Ticket #</th>
+                              <th scope="col">Title</th>
+                              <th scope="col">Type</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for ticket in pending_triage_tickets %}
+                            <tr>
+                                <td scope="row">
+                                    <form action="/bugs/browse/{{ticket.id}}" method="POST">
+                                        <div class="input-group">
+                                            <input type="submit" class="form-control bg-dark text-white" value="{{ticket.id}}" name="id"/>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td data-bs-toggle="tooltip" data-placement="top" title="{{ ticket.title }}" scope="row">{{ ticket.title }}</td>
+                                <td scope="row">{{ ticket.bucket }}</td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+
+                </div>
+              </div>
+
+                <!-- in_progress tickets -->
+                <div class="col-md-3 p-1 overflow-auto">
+                    <div class="h-100 p-3 text-primary bg-dark border rounded-3">
+                      <h2>In progress</h2>
+                        <hr>
+                      <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Ticket #</th>
+                              <th scope="col">Title</th>
+                              <th scope="col">Type</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for ticket in in_progress_tickets %}
+                            <tr>
+                                <td scope="row">
+                                    <form action="/bugs/browse/{{ticket.id}}" method="POST">
+                                        <div class="input-group">
+                                            <input type="submit" class="form-control bg-dark text-white" value="{{ticket.id}}" name="id"/>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td data-bs-toggle="tooltip" data-placement="top" title="{{ ticket.title }}" scope="row">{{ ticket.title }}</td>
+                                <td scope="row">{{ ticket.bucket }} </td>
+                            </tr>
+
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+
+                <!-- To do tickets -->
+                  <div class="col-md-3 p-1 overflow-auto">
+                    <div class="h-100 p-3 text-primary bg-dark rounded-3 overflow-auto">
+                      <h2>To Do</h2>
+                        <hr>
+                      <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Ticket #</th>
+                              <th scope="col">Title</th>
+                              <th scope="col">Type</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for ticket in todo_tickets %}
+                            <tr class="todo_tickets_table">
+                                <td scope="row">
+                                    <form action="/bugs/browse/{{ticket.id}}" method="POST">
+                                        <div class="input-group">
+                                            <input type="submit" class="form-control bg-dark text-white" value="{{ticket.id}}" name="id"/>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td data-bs-toggle="tooltip" data-placement="top" title="{{ ticket.title }}" scope="row">{{ ticket.title }}</td>
+                                <td scope="row">{{ ticket.bucket }} </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                </div>
+
+            <!-- Closed tickets -->
+                  <div class="col-md-3 p-1 overflow-auto">
+                    <div class="h-100 p-3 text-primary bg-dark rounded-3 overflow-auto">
+                      <h2>Closed tickets</h2>
+                        <hr>
+                      <div class="table-responsive-lg mx-auto pt-2 overflow-auto" style="height: 450px;">
+                        <table class="table table-striped table-dark table-hover">
+                          <thead style="position: sticky;top: 0; z-index: 1;">
+                            <tr>
+                              <th scope="col">Ticket #</th>
+                              <th scope="col">Title</th>
+                              <th scope="col">Type</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                          {% for ticket in closed_tickets %}
+                            <tr>
+                                <td scope="row">
+                                    <form action="/bugs/browse/{{ticket.id}}" method="POST">
+                                        <div class="input-group">
+                                            <input type="submit" class="form-control bg-dark text-white" value="{{ticket.id}}" name="id"/>
+                                        </div>
+                                    </form>
+                                </td>
+                                <td data-bs-toggle="tooltip" data-placement="top" title="{{ ticket.title }}" scope="row">{{ ticket.title }}</td>
+                                <td scope="row">{{ ticket.bucket }} </td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

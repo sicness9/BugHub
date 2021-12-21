@@ -31,11 +31,11 @@ oauth = OAuth(app)
 # initialize authlib
 auth0 = oauth.register(
     'auth0',
-    client_id=f'{CLIENT_ID}',
-    client_secret=f'{CLIENT_SECRET}',
-    api_base_url=f'{API_BASE_URL}',
-    access_token_url=f'{ACCESS_TOKEN_URL}',
-    authorize_url=f'{AUTHORIZE_URL}',
+    client_id=CLIENT_ID,
+    client_secret=CLIENT_SECRET,
+    api_base_url=API_BASE_URL,
+    access_token_url=ACCESS_TOKEN_URL,
+    authorize_url=AUTHORIZE_URL,
     client_kwargs={
         'scope': 'openid profile email',
     },
@@ -78,7 +78,7 @@ def callback_handling():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     return auth0.authorize_redirect(redirect_uri=url_for('auth.callback_handling', _external=True),
-                                    audience=f'{API_AUDIENCE}')
+                                    audience=API_AUDIENCE)
 
 
 @auth.route('/logout', methods=['GET', 'POST'])
@@ -86,5 +86,5 @@ def logout():
     # clear the session stored data
     session.clear()
     # redirect to logout endpoint
-    params = {'returnTo': url_for('main_page.main_redirect', _external=True), 'client_id': f'{CLIENT_ID}'}
+    params = {'returnTo': url_for('main_page.main_redirect', _external=True), 'client_id': CLIENT_ID}
     return redirect(auth0.api_base_url + '/v2/logout?' + urlencode(params))

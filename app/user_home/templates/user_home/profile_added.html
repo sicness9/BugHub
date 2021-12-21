@@ -57,12 +57,21 @@
 {% endblock %}
 
 {% block content %}
-<h1>Your profile information has been added</h1>
 
-<body>
-{% for key, value in form_data.items() %}
-    <h2> {{ key }} </h2>
-    <p> {{ value }} </p>
-{% endfor %}
-</body>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Your profile information has been updated</h1>
+</div>
+
+    <div class="content d-flex flex-column flex-column-fluid mt-5">
+        <div class="container-fluid">
+            {% for key, value in form_data.items() %}
+                <h2> {{ key }} </h2>
+                <p> {{ value }} </p>
+            {% endfor %}
+        </div>
+
+        <div class="d-grid gap-1 col-5 mx-auto m-2">
+            <a type="button" class="btn btn-primary btn-lg" href="{{ url_for('user_home.my_team') }}">Next</a>
+        </div>
+    </div>
 {% endblock %}

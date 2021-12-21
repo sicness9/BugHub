@@ -22,6 +22,7 @@ CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 API_BASE_URL = os.getenv('API_BASE_URL')
 ACCESS_TOKEN_URL = os.getenv('ACCESS_TOKEN_URL')
 AUTHORIZE_URL = os.getenv('AUTHORIZE_URL')
+API_AUDIENCE = os.getenv('API_AUDIENCE')
 
 
 oauth = OAuth(app)
@@ -77,7 +78,7 @@ def callback_handling():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     return auth0.authorize_redirect(redirect_uri=url_for('auth.callback_handling', _external=True),
-                                    audience=os.getenv('API_AUDIENCE'))
+                                    audience=f'{API_AUDIENCE}')
 
 
 @auth.route('/logout', methods=['GET', 'POST'])
@@ -85,5 +86,5 @@ def logout():
     # clear the session stored data
     session.clear()
     # redirect to logout endpoint
-    params = {'returnTo': url_for('main_page.main_redirect', _external=True), 'client_id': '2NmYQJ2tdMslvB5DV055dyRqD6WcKPVw'}
+    params = {'returnTo': url_for('main_page.main_redirect', _external=True), 'client_id': f'{CLIENT_ID}'}
     return redirect(auth0.api_base_url + '/v2/logout?' + urlencode(params))

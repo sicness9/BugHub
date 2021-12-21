@@ -4,10 +4,12 @@ import os
 import json
 from functools import wraps
 from six.moves.urllib_request import urlopen
+from dotenv import load_dotenv
 
 from flask import session, redirect, request, _request_ctx_stack
 from jose import jwt
 
+load_dotenv()
 
 AUTH0_DOMAIN = os.getenv('DOMAIN')
 API_AUDIENCE = os.getenv('API_AUDIENCE')

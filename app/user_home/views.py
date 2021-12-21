@@ -107,7 +107,7 @@ def add_profile():
         if len(entered_username) < 3:
             flash("Username must be 4 characters or greater", category='error')
             return render_template('user_home/user_profile_add_form.html', userinfo=current_user)
-        if len(entered_username) > 12:
+        if len(entered_username) > 15:
             flash("Username is too long", category='error')
             return render_template('user_home/user_profile_add_form.html', userinfo=current_user)
         else:
@@ -154,6 +154,12 @@ def add_profile():
             return render_template('user_home/user_profile_add_form.html', userinfo=current_user)
         else:
             user.last_name = request.form.get('last_name')
+
+        # update admin status
+        is_admin = request.form.get('is_admin')
+
+        if is_admin:
+            user.is_admin = True
 
     db.session.commit()
     return render_template('user_home/profile_added.html', userinfo=current_user, form_data=form_data)

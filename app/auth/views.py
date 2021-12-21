@@ -3,6 +3,7 @@
 
 import os
 import datetime
+from dotenv import load_dotenv
 
 from flask import session, redirect, url_for, jsonify
 from authlib.integrations.flask_client import OAuth
@@ -14,17 +15,26 @@ from . import auth
 from ..utils import AuthError
 from app.database.models import User
 
+load_dotenv()
+
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+API_BASE_URL = os.getenv('API_BASE_URL')
+ACCESS_TOKEN_URL = os.getenv('ACCESS_TOKEN_URL')
+AUTHORIZE_URL = os.getenv('AUTHORIZE_URL')
+
+
 oauth = OAuth(app)
 
 
 # initialize authlib
 auth0 = oauth.register(
     'auth0',
-    client_id='2NmYQJ2tdMslvB5DV055dyRqD6WcKPVw',
-    client_secret=os.getenv('CLIENT_SECRET'),
-    api_base_url='https://dev-vvl4qvlu.us.auth0.com',
-    access_token_url='https://dev-vvl4qvlu.us.auth0.com/oauth/token',
-    authorize_url='https://dev-vvl4qvlu.us.auth0.com/authorize',
+    client_id=f'{CLIENT_ID}',
+    client_secret=f'{CLIENT_SECRET}',
+    api_base_url=f'{API_BASE_URL}',
+    access_token_url=f'{ACCESS_TOKEN_URL}',
+    authorize_url=f'{AUTHORIZE_URL}',
     client_kwargs={
         'scope': 'openid profile email',
     },

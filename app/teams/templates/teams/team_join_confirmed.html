@@ -42,5 +42,17 @@
 {% endblock %}
 
 {% block content %}
-<h2>You have successfully joined the {{ current_team.team_name }} team!</h2>
+<div class="container h-25"></div>
+<div class="d-flex h-100 text-center">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-5">
+    </header>
+      <main class="px-3">
+          <h1>You have successfully joined the {{ current_team.team_name }} team!</h1>
+          <p class="lead">
+              <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-lg btn-secondary fw-bold border-black bg-white text-black">Boards</a>
+          </p>
+      </main>
+</div>
+</div>
 {% endblock %}

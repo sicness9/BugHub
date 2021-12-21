@@ -1,8 +1,7 @@
 # database models
-import datetime
-
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from sqlalchemy import DateTime, TIMESTAMP
+from sqlalchemy import DateTime, TIMESTAMP, event
 
 from .. import db
 
@@ -20,11 +19,15 @@ class User(db.Model):
     last_name = db.Column(db.String, nullable=True)
     email = db.Column(db.String, unique=True, index=True)
     tickets = db.Column(db.Integer, default=0)
-    team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
     created_at = db.Column(TIMESTAMP(timezone=True), server_default=func.now())
+    is_admin = db.Column(db.Boolean, default=False)
+    team_id = db.Column(db.Integer, db.ForeignKey('teams.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
-    team = db.relationship("Team", foreign_keys=[team_id], backref="users")
+    # team = db.relationship("Team", foreign_keys=[team_id], backref="users")
     # ticket = db.relationship("Ticket", foreign_keys=[tickets], backref="users")
+    team = db.relationship("Team")
+    ticket = db.relationship("Ticket")
 
     def __repr__(self):
         return f"{self.username} - {self.first_name} - {self.last_name} - {self.email}"
@@ -47,7 +50,7 @@ class Ticket(db.Model):
     time_created = db.Column(DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(DateTime(timezone=True), onupdate=func.now())
 
-    # owner_id = relationship("User", backref="tickets")
+    owner = relationship("User")
 
     def __repr__(self):
         return f"{self.status} - {self.bucket} - {self.title} - {self.ticket_description} - {self.owner_id}"
@@ -62,10 +65,28 @@ class Team(db.Model):
     __tablename__ = "teams"
 
     id = db.Column(db.Integer, primary_key=True, index=True)
-    team_name = db.Column(db.String, index=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    team_name = db.Column(db.String, unique=True, index=True)
+    admin_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    # user_id = relationship("User", backref="teams")
+    admin = relationship("User")
 
     def __repr__(self):
         return f"{self.team_name} - {self.user_id}"
+
+
+'''
+team models
+'''
+
+
+class Role(db.Model):
+    __tablename__ = "roles"
+
+    id = db.Column(db.Integer, primary_key=True, index=True)
+    role_name = db.Column(db.String, index=True)
+
+    def __repr__(self):
+        return f"{self.role_name} - {self.user_id}"
+
+
+

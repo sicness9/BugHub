@@ -15,6 +15,11 @@ from . import dashboard
 def dashboard():
     current_user = session['profile']
 
+    user = User.query.filter_by(email=current_user['name']).first()
+
+    if user.team_id is None:
+        return render_template('dashboard/dashboard_no_team_available.html', userinfo=current_user, user=user)
+
     # grab the total number of tickets in each category
     in_progress_tickets = len(Ticket.query.filter_by(status='In Progress').all())
     pending_triage_tickets = len(Ticket.query.filter_by(status='Pending Triage').all())
@@ -24,7 +29,7 @@ def dashboard():
     # get the total number of tickets that are not closed
     open_tickets = (in_progress_tickets + pending_triage_tickets + todo_tickets)
 
-    '''Statistics for Dev team'''
+    # Statistics for Dev role
     dev_team = User.query.filter_by(team_id=1).all()
     num_of_devs = len(dev_team)
 
@@ -32,7 +37,7 @@ def dashboard():
     for devs in dev_team:
         dev_tickets = dev_tickets + devs.tickets
 
-    '''Statistics for QA'''
+    # Statistics for QA role
     qa_team = User.query.filter_by(team_id=2).all()
     num_of_qa = len(qa_team)
 
@@ -40,7 +45,7 @@ def dashboard():
     for member in qa_team:
         qa_tickets = qa_tickets + member.tickets
 
-    '''Statistics for Support team'''
+    # Statistics for Support role
     support_team = User.query.filter_by(team_id=3).all()
     num_of_support = len(support_team)
 
@@ -48,7 +53,7 @@ def dashboard():
     for member in support_team:
         support_tickets = support_tickets + member.tickets
 
-    '''Statistics for engineers'''
+    # Statistics for engineers role
     engineer_team = User.query.filter_by(team_id=4).all()
     num_of_engineer = len(engineer_team)
 

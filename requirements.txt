@@ -29,6 +29,7 @@ python-dotenv==0.19.2
 python-jose==3.3.0
 requests==2.26.0
 rsa==4.8
+sendgrid==6.9.3
 six==1.16.0
 SQLAlchemy==1.4.27
 urllib3==1.26.7

@@ -8,12 +8,16 @@ from dotenv import load_dotenv
 
 from flask import session, redirect, request, _request_ctx_stack
 from jose import jwt
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 load_dotenv()
 
 AUTH0_DOMAIN = os.getenv('DOMAIN')
 API_AUDIENCE = os.getenv('API_AUDIENCE')
 ALGORITHMS = os.getenv('ALGORITHMS')
+SENDGRID_SENDER_EMAIL = os.getenv('SENDGRID_SENDER_EMAIL')
+TEMPLATE_ID = os.getenv('TEMPLATE_ID')
 
 
 # wrapper to require auth for endpoints
@@ -128,3 +132,21 @@ def requires_scope(required_scope):
             if token_scope == required_scope:
                 return True
     return False
+
+
+# send invite emails
+def send_email(invitee):
+    message = Mail(
+        from_email=SENDGRID_SENDER_EMAIL,
+        to_emails=invitee,
+        subject='Sending with Twilio SendGrid is Fun',
+        html_content='<strong>and easy to do anywhere, even with Python</strong>')
+    message.template_id = TEMPLATE_ID
+    try:
+        sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e)

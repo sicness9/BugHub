@@ -59,10 +59,10 @@
 </div>
 <div class="content d-flex flex-column flex-column-fluid">
     <div class="container-fluid">
-        <div class="row g-2 g-xxl-10 m-1">
+        <div class="row g-2 g-xxl-10 m-1 ms-5 mx-auto">
 
             <div class="col-md-2">
-                <div class="h-100 p-5 text-white bg-dark rounded-3">
+                <div class="h-100 p-4 text-white bg-dark rounded-3">
                     <h2>Open tickets</h2>
                     <hr>
                     <div class="container align-center">
@@ -72,7 +72,7 @@
             </div>
 
             <div class="col-md-2">
-                <div class="h-100 p-5 bg-light border rounded-3">
+                <div class="h-100 p-4 bg-light border rounded-3">
                     <h2>Closed tickets</h2>
                     <hr>
                     <div class="container align-center">
@@ -82,15 +82,15 @@
             </div>
 
             <div class="col-lg-8">
-                <div class="card chart-container">
-                    <canvas id="chart"></canvas>
+                <div class="donut-chart">
+
                 </div>
             </div>
 
         </div>
 
-        <div class="row g-2 g-xxl-10 m-1">
-            <div class="col-lg-6">
+        <div class="row g-2 g-xxl-10 m-1 ms-5">
+            <div class="col-lg-5">
                 <div class="h-100 p-5 text-white bg-success rounded-3">
                     <h2>Developer Activity</h2>
                     <h3># of members: {{ num_of_devs }}</h3>
@@ -118,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-5">
                 <div class="h-100 p-5 text-white bg-danger rounded-3">
                     <h2>QA Activity</h2>
                     <h3># of members: {{ num_of_qa }}</h3>
@@ -146,8 +146,8 @@
             </div>
         </div>
 
-        <div class="row g-2 g-xxl-10 m-1">
-            <div class="col-lg-6">
+        <div class="row g-2 g-xxl-10 m-1 ms-5">
+            <div class="col-lg-5">
                 <div class="h-100 p-5 text-white bg-warning rounded-3">
                     <h2>Support Activity</h2>
                     <h3># of members: {{ num_of_support }}</h3>
@@ -174,7 +174,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-6">
+            <div class="col-lg-5">
                 <div class="h-100 p-5 text-white bg-info rounded-3">
                     <h2>Engineer Activity</h2>
                     <h3># of members: {{ num_of_engineer }}</h3>

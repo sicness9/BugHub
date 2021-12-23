@@ -12,7 +12,7 @@
                     <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
                     <datalist id="alltickets">
                         {% for ticket in all_tickets %}
-                        <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                        <option value="{{ ticket.id }}">{{ ticket.id }} {{ ticket.title }}</option>
                         {% endfor %}
                     </datalist>
                     <button type="submit" class="btn btn-outline-primary">search</button>
@@ -20,11 +20,13 @@
             </form>
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
+                    {% if user.role_id == 5 %}
                     <li class="nav-item">
-                        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link text-white" aria-current="page">
+                        <a href="{{ url_for('dashboard.dashboard_main') }}" class="nav-link text-white" aria-current="page">
                             Dashboard
                         </a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link active" aria-current="page">
                             Bugs
@@ -207,7 +209,7 @@
         <div class="input-group">
             <input class="form-control" list="ticketOwners" id="exampleDataList" name="owner_id" placeholder="{{ ticket_owner.first_name}} {{ ticket_owner.last_name }}">
             <datalist id="ticketOwners">
-                {% for option in active_users %}
+                {% for option in active_team_users %}
                 <option value="{{ option.id }} {{ option.first_name }} {{ option.last_name }}"> {{ option.first_name }} {{ option.last_name }} - {{ option.username }}</option>
                 {% endfor %}
             </datalist>

@@ -10,11 +10,13 @@
               <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
             <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
+                   {% if user.role_id == 5 %}
                     <li class="nav-item">
-                        <a href="{{ url_for('main_page.main') }}" class="nav-link text-white" aria-current="page">
+                        <a href="{{ url_for('dashboard.dashboard_main') }}" class="nav-link text-white" aria-current="page">
                             Dashboard
                         </a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link text-white" aria-current="page">
                             Bugs
@@ -60,8 +62,8 @@
           <option selected>Choose...</option>
           <option value="In Progress">In Progress</option>
           <option value="Pending Triage">Pending Triage</option>
-          <option value="Closed">Closed</option>
           <option value="To Do">To Do</option>
+          <option value="Closed">Closed</option>
         </select>
       </div>
 

@@ -5,8 +5,7 @@ from flask_cors import cross_origin
 
 from . import main_page
 from app.utils import requires_auth
-from app.database.models import Ticket, Role
-from app import db
+from app.database.models import Ticket
 
 
 # main page but redirect to log in first
@@ -22,14 +21,6 @@ def main_redirect():
 @cross_origin(headers=["Content Type", "Authorization"])
 @requires_auth
 def main():
-    all_tickets = Ticket.query.all()
-
-    # initial db set up for default roles
-    db.session.add(Role(role_name='Developer'))
-    db.session.add(Role(role_name='Quality Assurance'))
-    db.session.add(Role(role_name='Support'))
-    db.session.add(Role(role_name='Engineer'))
-    db.session.add(Role(role_name='Admin'))
-    db.session.commit()
+    all_tickets = Ticket.query.all()  # all tickets available for search function
 
     return render_template('main_page/main_page.html', userinfo=session['profile'], all_tickets=all_tickets)

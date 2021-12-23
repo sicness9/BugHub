@@ -36,7 +36,7 @@ def user_home_page():
                                userinfo=current_user, user=user, all_tickets=all_tickets)
 
     return render_template("user_home/user_home.html", userinfo=current_user, user=user,
-                           current_team=team, all_tickets=all_tickets)
+                           team=team, all_tickets=all_tickets)
 
 
 # after initial sign-in or sign-up ask for profile information

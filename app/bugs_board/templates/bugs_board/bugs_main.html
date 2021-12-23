@@ -20,11 +20,13 @@
                 </form>
                 <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
+                    {% if user.role_id == 5 %}
                     <li class="nav-item">
-                        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link text-white" aria-current="page">
+                        <a href="{{ url_for('dashboard.dashboard_main') }}" class="nav-link text-white" aria-current="page">
                             Dashboard
                         </a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link active" aria-current="page">
                             Bugs
@@ -55,7 +57,7 @@
 <main class="d-flex flex-nowrap h-100 overflow-hidden">
     <div class="container-fluid mx-auto ">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-2 border-bottom overflow-auto">
-          <h1 class="h2">Bugs Home page (WIP)</h1>
+          <h1 class="h2">{{ team.team_name }}'s Bugs and Tickets</h1>
         </div>
 
         <div class="row d-flex flex-nowrap h-100">

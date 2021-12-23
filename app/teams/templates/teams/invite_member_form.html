@@ -1,0 +1,83 @@
+{% extends "teams/base.html" %} {% block title %} Invite Members {% endblock %}
+
+{% block nav %}
+<div class="row">
+        <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+            <a href="{{ url_for('main_page.main')}}" class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+              <span class="fs-4">BugHub</span>
+            </a>
+            <hr>
+              <form action="/bugs/browse/<id>" method="POST">
+                    <div class="input-group">
+                        <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                        <datalist id="alltickets">
+                            {% for ticket in all_tickets %}
+                            <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                            {% endfor %}
+                        </datalist>
+                        <button type="submit" class="btn btn-outline-primary">search</button>
+                    </div>
+                </form>
+            <hr>
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item">
+                        <a href="{{ url_for('dashboard.dashboard_main') }}" class="nav-link text-white" aria-current="page">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link active" aria-current="page">
+                            Invite Members
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link text-white" aria-current="page">
+                            Bugs
+                        </a>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                        <strong> {{ userinfo.name }} </strong>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+                    </ul>
+                </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid mx-auto">
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h2> Invite your team members </h2>
+    </div>
+
+    <div class="content d-flex flex-column flex-column-fluid mt-5">
+        <div class="container-fluid">
+
+            <form action="{{ url_for('teams.invite_members') }}" method="POST">
+                <div class="row-sm-3 g-3">
+
+                    <div class="col-sm-2 mx-auto mb-3 w-25 m-5">
+                      <label for="members_input" class="form-label">Enter your team member's emails, <b>separated by comma's</b></label>
+                      <textarea class="form-control" id="members_input" name="members_input" rows="5"></textarea>
+                    </div>
+
+                    <div class="d-grid gap-1 col-1 m-3 mx-auto">
+                        <button type="submit" class="btn btn-primary btn-md" value="Submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "user_home/base.html" %} {% block title %} Accept invite {% endblock %}
+
+{% block nav %}
+<div class="row">
+    <div class="d-flex flex-column position-sticky flex-shrink-0 p-3 text-white bg-dark" style="width: 315px;">
+        <a href="{{ url_for('main_page.main')}}"
+           class="d-flex align-items-center ps-3 mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">BugHub</span>
+        </a>
+        <hr>
+        <form action="/bugs/browse/<id>" method="POST">
+            <div class="input-group">
+                <input class="form-control" list="alltickets" id="allticketsearch" name="id" placeholder="">
+                <datalist id="alltickets">
+                    {% for ticket in all_tickets %}
+                    <option value="{{ ticket.id }} {{ ticket.title }}">{{ ticket.id }} {{ ticket.title }}</option>
+                    {% endfor %}
+                </datalist>
+                <button type="submit" class="btn btn-outline-primary">search</button>
+            </div>
+        </form>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="{{ url_for('main_page.main') }}" class="nav-link text-white" aria-current="page">
+                    Main Page
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('user_home.user_home_page') }}" class="nav-link text-white">
+                    User home
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('user_home.my_tickets') }}" class="nav-link text-white">
+                    My tickets
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('user_home.my_team') }}" class="nav-link text-white">
+                    My team
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+               id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="{{ userinfo.picture }}" alt="" width="32" height="32" class="rounded-circle me-2">
+                <strong> {{ userinfo.name }} </strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="{{ url_for('user_home.user_home_page') }}">My Account</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sign out</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Welcome, {{ userinfo.name }}.</h1>
+</div>
+
+
+<div class="content d-flex flex-column flex-column-fluid mt-5">
+    <div class="container-fluid">
+
+        <div class="container-fluid align-center col-lg-12 mt-5">
+
+            <form action="{{ url_for('user_home.accept_invite') }}" method="POST">
+                <div class="row g-3 mx-auto">
+
+                    <div class="col-sm-6 mx-auto">
+
+                        <h3 class="mx-auto">You have been invited to join a team!</h3>
+                        <label for="role" class="form-label">What is your role?</label>
+                        <select class="form-select" id="role" name="role_id" aria-label="role select">
+                            <option selected>Choose..</option>
+                            <option value="1">Developer</option>
+                            <option value="2">Quality Assurance</option>
+                            <option value="3">Support</option>
+                            <option value="4">Engineer</option>
+                            <option value="5">Admin</option>
+                        </select>
+
+                        <div class="d-grid gap-1 col-3 mx-auto m-2">
+                            <button type="submit" class="btn btn-primary btn-md" value="Submit">Submit</button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

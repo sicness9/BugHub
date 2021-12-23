@@ -18,9 +18,9 @@ from . import user_home
 def user_home_page():
     current_user = session['profile']
     user = User.query.filter_by(email=current_user['name']).first()
-    current_team = Team.query.filter_by(id=user.team_id).first()
+    team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.all()
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     # check if username, first_name or last_name is missing in DB.
     # If yes, provide screen so they can add the missing information
@@ -36,7 +36,7 @@ def user_home_page():
                                userinfo=current_user, user=user, all_tickets=all_tickets)
 
     return render_template("user_home/user_home.html", userinfo=current_user, user=user,
-                           current_team=current_team, all_tickets=all_tickets)
+                           current_team=team, all_tickets=all_tickets)
 
 
 # after initial sign-in or sign-up ask for profile information
@@ -46,6 +46,9 @@ def user_home_page():
 def init_profile():
     current_user = session['profile']
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     if user.username is not None and user.invite_status == 2 and user.role_id is None:
         return redirect(url_for('user_home.accept_invite'))
@@ -54,7 +57,7 @@ def init_profile():
         return redirect(url_for('user_home.user_home_page'))
 
     return render_template('user_home/user_profile_add_form.html',
-                           userinfo=current_user, user=user)
+                           userinfo=current_user, user=user, all_tickets=all_tickets)
 
 
 # accept invite for existing accounts
@@ -65,6 +68,8 @@ def accept_invite():
     current_user = session['profile']
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     if request.method == 'POST':
         role_id = request.form.get('role_id')
@@ -79,7 +84,7 @@ def accept_invite():
         db.session.commit()
         return redirect(url_for('user_home.user_home_page'))
 
-    return render_template('user_home/accept_invite.html', userinfo=current_user, user=user)
+    return render_template('user_home/accept_invite.html', userinfo=current_user, user=user, all_tickets=all_tickets)
 
 
 # add user profile information to User db
@@ -91,6 +96,8 @@ def add_profile():
     form_data = request.form
 
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
     current_team = user.team
 
     if request.method == 'POST':
@@ -169,7 +176,8 @@ def add_profile():
             user.is_admin = True'''
 
         db.session.commit()
-    return render_template('user_home/profile_added.html', userinfo=current_user, form_data=form_data)
+    return render_template('user_home/profile_added.html', userinfo=current_user, form_data=form_data,
+                           all_tickets=all_tickets)
 
 
 # update username
@@ -180,6 +188,9 @@ def update_username():
     current_user = session['profile']
 
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     if request.method == 'POST':
 
@@ -204,7 +215,7 @@ def update_username():
             db.session.commit()
             return redirect(url_for('user_home.user_home_page'))
 
-    return render_template('user_home/update_username.html', userinfo=current_user, user=user)
+    return render_template('user_home/update_username.html', userinfo=current_user, user=user, all_tickets=all_tickets)
 
 
 # update first_name
@@ -216,6 +227,9 @@ def update_first_name():
     form_data = request.form
 
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     if request.method == 'POST':
         entered_firstname = request.form.get('first_name')
@@ -241,7 +255,8 @@ def update_first_name():
             db.session.commit()
             return redirect(url_for('user_home.user_home_page'))
 
-    return render_template('user_home/update_first_name.html', userinfo=current_user, form_data=form_data, user=user)
+    return render_template('user_home/update_first_name.html', userinfo=current_user, form_data=form_data, user=user,
+                           all_tickets=all_tickets)
 
 
 # update last_name
@@ -253,6 +268,9 @@ def update_last_name():
     form_data = request.form
 
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     if request.method == 'POST':
         entered_lastname = request.form.get('last_name')
@@ -277,7 +295,8 @@ def update_last_name():
             db.session.commit()
             return redirect(url_for('user_home.user_home_page'))
 
-    return render_template('user_home/update_last_name.html', userinfo=current_user, form_data=form_data, user=user)
+    return render_template('user_home/update_last_name.html', userinfo=current_user, form_data=form_data, user=user,
+                           all_tickets=all_tickets)
 
 
 # team view page
@@ -292,7 +311,7 @@ def my_team():
     team = Team.query.filter_by(id=user.team_id).first()
     # print(members)
 
-    all_tickets = Ticket.query.all()  # all tickets available for search function
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     # if no team joined yet, have the user join one first
     if user.team_id is None:
@@ -310,7 +329,8 @@ def my_tickets():
 
     user = User.query.filter_by(email=current_user['name']).first()
     tickets = Ticket.query.filter_by(owner_id=user.id).all()
+    team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.all()  # all tickets available for search function
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     return render_template('user_home/my_tickets.html', userinfo=current_user, tickets=tickets, all_tickets=all_tickets)

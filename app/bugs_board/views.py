@@ -58,7 +58,7 @@ def bugs_main():
 
         todo_tickets.append(ticket)'''
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     '''all_tickets = []
     for ticket in all_tickets_query:
@@ -81,6 +81,8 @@ def bugs_main():
 def create_ticket():
     current_user = session['profile']
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     if request.method == 'POST':
         title = request.form.get('title')
@@ -107,7 +109,7 @@ def create_ticket():
 
             return redirect(url_for('bugs_board.bugs_main'))
 
-    return render_template('bugs_board/create_ticket.html', userinfo=current_user, user=user)
+    return render_template('bugs_board/create_ticket.html', userinfo=current_user, user=user, all_tickets=all_tickets)
 
 
 # make a view for ticket information based on ticket number
@@ -118,7 +120,7 @@ def view_ticket(id):
     current_user = session['profile']
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
-    all_tickets = Ticket.query.all()  # query for all tickets for search bar
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     # take the input from the search and split it to grab the ID value only
     form_search = request.form.get('id')
@@ -144,10 +146,13 @@ def view_ticket(id):
 @requires_auth
 def update_ticket(id):
     current_user = session['profile']
+
     user = User.query.filter_by(email=current_user['name']).first()
     ticket = Ticket.query.filter_by(id=id).first()
     ticket_owner = User.query.filter_by(id=ticket.owner_id).first()
-    all_tickets = Ticket.query.all()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     # update ticket information
     if request.method == 'POST':

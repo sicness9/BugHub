@@ -1,4 +1,4 @@
-{% extends "bugs_board/base.html" %} {% block title %} Boards Dashboard {% endblock %}
+{% extends "dashboard/base.html" %} {% block title %} Team Dashboard {% endblock %}
 
 {% block nav %}
 <div class="row">
@@ -54,8 +54,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">{{ team.team_name }} Dashboard (WIP)</h1>
+<div class="d-flex justify-content-between flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">{{ team.team_name }}'s Dashboard</h1>
 </div>
 <div class="content d-flex flex-column flex-column-fluid">
     <div class="container-fluid">
@@ -82,8 +82,8 @@
             </div>
 
             <div class="col-lg-8">
-                <div class="h-100 w-100 p-5 bg-light border rounded-3">
-                    <h2>Graph or stats of something WIP</h2>
+                <div class="card chart-container">
+                    <canvas id="chart"></canvas>
                 </div>
             </div>
 

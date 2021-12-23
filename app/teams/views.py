@@ -5,7 +5,7 @@ from flask_cors import cross_origin
 
 from app.utils import requires_auth, send_email
 from app import db
-from app.database.models import Team, User, TeamMember
+from app.database.models import Team, User, TeamMember, Ticket
 from . import teams
 
 
@@ -17,9 +17,12 @@ def team_home_page():
     current_user = session['profile']
 
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     if user.is_admin is not True:
-        return render_template('teams/no_team_invite.html', userinfo=current_user)
+        return render_template('teams/no_team_invite.html', userinfo=current_user, all_tickets=all_tickets)
 
     return redirect(url_for('teams.create_team'))
 
@@ -32,6 +35,9 @@ def create_team():
     current_user = session['profile']
 
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     # create new team and send to team dashboard
     if request.method == 'POST':
@@ -39,10 +45,10 @@ def create_team():
 
         if len(team_name) > 15:
             flash("Team name is too long, must be 15 characters or less", category='error')
-            return render_template('teams/create_team.html', userinfo=current_user)
+            return render_template('teams/create_team.html', userinfo=current_user, all_tickets=all_tickets)
         if Team.query.filter_by(team_name=team_name).first():
             flash("This team name already exists", category='error')
-            return render_template('teams/create_team.html', userinfo=current_user)
+            return render_template('teams/create_team.html', userinfo=current_user, all_tickets=all_tickets)
 
         admin_id = user.id
 
@@ -65,7 +71,7 @@ def create_team():
 
         return redirect(url_for('dashboard.dashboard_main'))
 
-    return render_template('teams/create_team.html', userinfo=current_user)
+    return render_template('teams/create_team.html', userinfo=current_user, all_tickets=all_tickets)
 
 
 # invite member
@@ -76,6 +82,9 @@ def invite_members():
     current_user = session['profile']
 
     user = User.query.filter_by(email=current_user['name']).first()
+    team = Team.query.filter_by(id=user.team_id).first()
+
+    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
 
     existing_team_user_list = []
     invited_users = []
@@ -134,10 +143,11 @@ def invite_members():
 
         db.session.commit()
         return render_template('teams/invite_confirm.html', userinfo=current_user,
-                               existing_user_list=existing_team_user_list, new_user_list=invited_users)
+                               existing_user_list=existing_team_user_list, new_user_list=invited_users,
+                               all_tickets=all_tickets)
 
     # print("existing member list:", existing_team_user_list)
-    return render_template('teams/invite_member_form.html', userinfo=current_user, user=user)
+    return render_template('teams/invite_member_form.html', userinfo=current_user, user=user, all_tickets=all_tickets)
 
 
 # leave team

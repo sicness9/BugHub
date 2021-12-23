@@ -21,10 +21,17 @@
             <hr>
                 <ul class="nav nav-pills flex-column mb-auto">
                     <li class="nav-item">
-                        <a href="{{ url_for('dashboard.dashboard') }}" class="nav-link active" aria-current="page">
+                        <a href="{{ url_for('dashboard.dashboard_main') }}" class="nav-link active" aria-current="page">
                             Dashboard
                         </a>
                     </li>
+                    {% if team.admin_id == user.id %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('teams.invite_members') }}" class="nav-link text-white" aria-current="page">
+                            Invite Members
+                        </a>
+                    </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a href="{{ url_for('bugs_board.bugs_main') }}" class="nav-link text-white" aria-current="page">
                             Bugs
@@ -48,7 +55,7 @@
 
 {% block content %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-  <h1 class="h2">Boards dashboard (WIP)</h1>
+  <h1 class="h2">{{ team.team_name }} Dashboard (WIP)</h1>
 </div>
 <div class="content d-flex flex-column flex-column-fluid">
     <div class="container-fluid">

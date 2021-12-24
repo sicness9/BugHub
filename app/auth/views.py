@@ -71,12 +71,15 @@ def callback_handling():
         db.session.add(new_user)
         db.session.commit()
 
-    # update the existing profile and flip invite status to accept
-    if user.invite_status == 1:
-        # invite status 2 means accepted
-        user.invite_status = 2
+    try:
+        # update the existing profile and flip invite status to accept
+        if user.invite_status == 1:
+            # invite status 2 means accepted
+            user.invite_status = 2
 
-        db.session.commit()
+            db.session.commit()
+    except:
+        pass
 
     return redirect(url_for('user_home.init_profile'))
 

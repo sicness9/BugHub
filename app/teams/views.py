@@ -19,7 +19,10 @@ def team_home_page():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     if user.is_admin is not True:
         return render_template('teams/no_team_invite.html', userinfo=current_user, all_tickets=all_tickets)
@@ -37,7 +40,10 @@ def create_team():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     # create new team and send to team dashboard
     if request.method == 'POST':
@@ -84,7 +90,10 @@ def invite_members():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     existing_team_user_list = []
     invited_users = []

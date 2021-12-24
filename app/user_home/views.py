@@ -20,7 +20,10 @@ def user_home_page():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     # check if username, first_name or last_name is missing in DB.
     # If yes, provide screen so they can add the missing information
@@ -48,7 +51,10 @@ def init_profile():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     if user.username is not None and user.invite_status == 2 and user.role_id is None:
         return redirect(url_for('user_home.accept_invite'))
@@ -69,7 +75,10 @@ def accept_invite():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     if request.method == 'POST':
         role_id = request.form.get('role_id')
@@ -97,7 +106,12 @@ def add_profile():
 
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
+
     current_team = user.team
 
     if request.method == 'POST':
@@ -168,9 +182,12 @@ def add_profile():
         user.role_id = role_id
 
         # add to team_members table
-        member_add = TeamMember(team_name=current_team.team_name, admin_id=current_team.admin_id, role_id=role_id,
-                                user_id=user.id)
-        db.session.add(member_add)
+        if current_team is not None:
+            member_add = TeamMember(team_name=current_team.team_name, admin_id=current_team.admin_id, role_id=role_id,
+                                    user_id=user.id)
+            db.session.add(member_add)
+        else:
+            pass
 
         '''if is_admin:
             user.is_admin = True'''
@@ -190,7 +207,10 @@ def update_username():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     if request.method == 'POST':
 
@@ -229,7 +249,10 @@ def update_first_name():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     if request.method == 'POST':
         entered_firstname = request.form.get('first_name')
@@ -270,7 +293,10 @@ def update_last_name():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     if request.method == 'POST':
         entered_lastname = request.form.get('last_name')
@@ -311,7 +337,10 @@ def my_team():
     team = Team.query.filter_by(id=user.team_id).first()
     # print(members)
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     # if no team joined yet, have the user join one first
     if user.team_id is None:
@@ -331,6 +360,9 @@ def my_tickets():
     tickets = Ticket.query.filter_by(owner_id=user.id).all()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     return render_template('user_home/my_tickets.html', userinfo=current_user, tickets=tickets, all_tickets=all_tickets)

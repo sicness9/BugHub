@@ -25,6 +25,9 @@ def main():
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     return render_template('main_page/main_page.html', userinfo=session['profile'], all_tickets=all_tickets)

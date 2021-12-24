@@ -19,6 +19,11 @@ def dashboard_main():
     team = Team.query.filter_by(id=user.team_id).first()
     # print(user.team)
 
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
+
     if user.team_id is None:
         return render_template('dashboard/dashboard_no_team_available.html', userinfo=current_user, user=user)
     if user.role_id != 5:
@@ -93,6 +98,6 @@ def dashboard_main():
                            engineer_team=engineer_team, num_of_devs=num_of_devs, dev_tickets=dev_tickets,
                            num_of_qa=num_of_qa, qa_tickets=qa_tickets, num_of_engineer=num_of_engineer,
                            eng_tickets=eng_tickets, num_of_support=num_of_support, support_tickets=support_tickets,
-                           user=user, team=team)
+                           user=user, team=team, all_tickets=all_tickets)
 
 

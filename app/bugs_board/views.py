@@ -120,7 +120,11 @@ def view_ticket(id):
     current_user = session['profile']
     user = User.query.filter_by(email=current_user['name']).first()
     team = Team.query.filter_by(id=user.team_id).first()
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     # take the input from the search and split it to grab the ID value only
     form_search = request.form.get('id')
@@ -152,7 +156,10 @@ def update_ticket(id):
     ticket_owner = User.query.filter_by(id=ticket.owner_id).first()
     team = Team.query.filter_by(id=user.team_id).first()
 
-    all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    if team is not None:
+        all_tickets = Ticket.query.filter_by(team_id=team.id).all()  # for search bar
+    else:
+        all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     # update ticket information
     if request.method == 'POST':

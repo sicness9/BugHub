@@ -26,7 +26,6 @@ def create_app():
     from flask_migrate import Migrate
     migrate = Migrate(app, db)
 
-    from .api import api
     from .auth import auth
     from .main_page import main_page
     from .dashboard import dashboard
@@ -34,7 +33,6 @@ def create_app():
     from .teams import teams
     from .bugs_board import bugs_board
 
-    app.register_blueprint(api, subdomain='api', url_prefix='/v1')
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(main_page, url_prefix='/')
     app.register_blueprint(dashboard, url_prefix='/dashboard')

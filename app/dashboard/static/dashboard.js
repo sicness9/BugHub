@@ -1,27 +1,23 @@
-   var ctx = document.getElementById("chart").getContext("2d");
-    var myChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
-        ],
-        datasets: [
-          {
-            label: "work load",
-            data: [2, 9, 3, 17, 6, 3, 7],
-            backgroundColor: "rgba(153,205,1,0.6)",
+var chart = bb.generate({
+        data: {
+          columns: [
+            ["Blue", 2],
+            ["orange", 4],
+            ["green", 3],
+          ],
+          type: "donut",
+          onclick: function (d, i) {
+            console.log("onclick", d, i);
           },
-          {
-            label: "free hours",
-            data: [2, 2, 5, 5, 2, 1, 10],
-            backgroundColor: "rgba(155,153,10,0.6)",
+          onover: function (d, i) {
+            console.log("onover", d, i);
           },
-        ],
-      },
-    });
+          onout: function (d, i) {
+            console.log("onout", d, i);
+          },
+        },
+        donut: {
+          title: "70",
+        },
+        bindto: "#donut-chart",
+      });

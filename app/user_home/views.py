@@ -184,7 +184,7 @@ def add_profile():
         # add to team_members table
         if current_team is not None:
             member_add = TeamMember(team_name=current_team.team_name, admin_id=current_team.admin_id, role_id=role_id,
-                                    user_id=user.id)
+                                    user_id=user.id, user=user)
             db.session.add(member_add)
         else:
             pass
@@ -193,8 +193,11 @@ def add_profile():
             user.is_admin = True'''
 
         db.session.commit()
+
+    new_profile = User.query.filter_by(id=user.id).first()
+
     return render_template('user_home/profile_added.html', userinfo=current_user, form_data=form_data,
-                           all_tickets=all_tickets)
+                           all_tickets=all_tickets, new_profile=new_profile)
 
 
 # update username

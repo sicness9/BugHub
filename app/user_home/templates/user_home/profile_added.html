@@ -63,12 +63,63 @@
 </div>
 
     <div class="content d-flex flex-column flex-column-fluid mt-5">
-        <div class="container-fluid">
-            {% for key, value in form_data.items() %}
-                <h2> {{ key }} </h2>
-                <p> {{ value }} </p>
-            {% endfor %}
-        </div>
+
+        <div class="col-md-9">
+                <div class="h-100 p-5 bg-light border rounded-3">
+
+                <!-- Grid 1 -->
+                <div class="row p-2">
+                    <div class="col">
+                        <h2>Account Details </h2>
+                    </div>
+                    <hr>
+                </div>
+
+
+            <!-- Grid 2 -->
+            <div class="row p-2">
+                <div class="col">
+                    <p><b>Email:</b> {{ new_profile.email}}
+                    </p>
+                </div>
+                <div class="col">
+                    <p></p>
+                </div>
+            </div>
+
+
+            <form action="{{ url_for('user_home.update_username') }}">
+                <!-- Grid 3 -->
+                <div class="row p-2">
+                    <div class="col-5">
+                        <p><b>Username:</b> {{ new_profile.username }}
+                    </p>
+                    </div>
+                </div>
+            </form>
+
+                <form action="{{ url_for('user_home.update_first_name') }}">
+                    <!-- Grid 4 -->
+                    <div class="row p-2">
+                        <div class="col-5">
+                            <p><b>First name:</b> {{ new_profile.first_name }}
+                        </p>
+                        </div>
+                    </div>
+                </form>
+
+                    <form action="{{ url_for('user_home.update_last_name') }}">
+                        <!-- Grid 5 -->
+                        <div class="row p-2">
+                            <div class="col-5">
+                                <p><b>Last name:</b> {{ new_profile.last_name }}
+                            </p>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
 
         <div class="d-grid gap-1 col-5 mx-auto m-2">
             <a type="button" class="btn btn-primary btn-lg" href="{{ url_for('user_home.my_team') }}">Next</a>

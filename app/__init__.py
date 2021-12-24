@@ -8,12 +8,12 @@ from flask_sqlalchemy import SQLAlchemy
 load_dotenv()
 
 db = SQLAlchemy()
-db_user = os.getenv('BH_DB_USER')
-db_password = os.getenv('BH_DB_PASSWORD')
-db_host = os.getenv('BH_DB_HOST')
-database = os.getenv('BH_DB')
+DB_USER = os.getenv('BH_DB_USER')
+DB_PASSWORD = os.getenv('BH_DB_PASSWORD')
+DB_HOST = os.getenv('BH_DB_HOST')
+DB = os.getenv('BH_DB')
 
-DB_URL = f'postgresql://{db_user}:{db_password}@{db_host}/{database}'
+DB_URL = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB}'
 
 
 def create_app():
@@ -26,6 +26,7 @@ def create_app():
     from flask_migrate import Migrate
     migrate = Migrate(app, db)
 
+    from .api import api
     from .auth import auth
     from .main_page import main_page
     from .dashboard import dashboard
@@ -33,6 +34,7 @@ def create_app():
     from .teams import teams
     from .bugs_board import bugs_board
 
+    app.register_blueprint(api, subdomain='api', url_prefix='/v1')
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(main_page, url_prefix='/')
     app.register_blueprint(dashboard, url_prefix='/dashboard')
@@ -40,7 +42,7 @@ def create_app():
     app.register_blueprint(teams, url_prefix='/teams')
     app.register_blueprint(bugs_board, url_prefix='/bugs')
 
-    from app.database.models import User, Ticket, Team, Role
+    from app.database.models import User, Ticket, Team, Role, TeamMember
 
     create_database(app)
 
@@ -49,5 +51,3 @@ def create_app():
 
 def create_database(app):
     db.create_all(app=app)
-
-

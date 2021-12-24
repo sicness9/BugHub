@@ -65,17 +65,17 @@ def callback_handling():
     # check if email exists in db
     user = User.query.filter_by(email=userinfo['name']).first()
 
+    # if email does not exist, add to User table
+    if user is None:
+        new_user = User(email=userinfo['name'], created_at=datetime.datetime.now())
+        db.session.add(new_user)
+        db.session.commit()
+
     # update the existing profile and flip invite status to accept
     if user.invite_status == 1:
         # invite status 2 means accepted
         user.invite_status = 2
 
-        db.session.commit()
-
-    # if email does not exist, add to User table
-    if user is None:
-        new_user = User(email=userinfo['name'], created_at=datetime.datetime.now())
-        db.session.add(new_user)
         db.session.commit()
 
     return redirect(url_for('user_home.init_profile'))

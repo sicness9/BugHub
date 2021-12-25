@@ -35,9 +35,6 @@ def dashboard_main():
     closed_tickets = len(Ticket.query.filter_by(status='Closed', team_id=team.id).all())
     todo_tickets = len(Ticket.query.filter_by(status='To Do', team_id=team.id).all())'''
 
-    # test
-    all_tickets = Ticket.query.all()
-
     in_progress_tickets = []
     for ticket in all_tickets:
         if ticket.status == 'In Progress' and ticket.team_id == team.id:

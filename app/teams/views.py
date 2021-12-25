@@ -25,7 +25,7 @@ def team_home_page():
         all_tickets = Ticket.query.filter_by(owner_id=user.id).all()
 
     if user.is_admin is not True:
-        return render_template('teams/no_team_invite.html', userinfo=current_user, all_tickets=all_tickets)
+        return render_template('teams/create_team.html', userinfo=current_user, all_tickets=all_tickets)
 
     return redirect(url_for('teams.create_team'))
 

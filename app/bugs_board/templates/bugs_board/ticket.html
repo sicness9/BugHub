@@ -54,6 +54,8 @@
 {% endblock %}
 
 {% block content %}
+
+<!-- Delete ticket button -->
 <form action="{{ url_for('bugs_board.delete_ticket', id=ticket.id) }}" method="POST">
 
     <div class="d-grid justify-content-md-end">
@@ -87,7 +89,7 @@
     </div>
 </form>
 
-
+<!-- Ticket -->
 <form action="/bugs/update/{{ticket.id}}" method="POST">
     <div class="row">
         <div class="col-6">
@@ -198,6 +200,7 @@
       <textarea class="form-control" id="ticket_description" name="ticket_description" rows="15">{{ ticket.ticket_description }}</textarea>
     </div>
 
+    <!-- Buttons -->
     <div class="d-grid gap-5 d-md-block">
         <input class="btn btn-lg btn-secondary fw-bold border-white bg-primary text-white" type="submit" value ="Save" />
         <a type="button" class="btn btn-lg btn-secondary fw-bold border-white bg-dark text-white" href="{{ url_for('bugs_board.bugs_main') }}">Done </a>

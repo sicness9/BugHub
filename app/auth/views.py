@@ -9,7 +9,7 @@ from flask import session, redirect, url_for, jsonify
 from authlib.integrations.flask_client import OAuth
 from six.moves.urllib.parse import urlencode
 
-from app.main import app
+from main import app
 from app import db
 from . import auth
 from ..utils import AuthError

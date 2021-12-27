@@ -11,6 +11,8 @@ from jose import jwt
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
+from app.database.models import User, Team
+
 load_dotenv()
 
 AUTH0_DOMAIN = os.getenv('DOMAIN')

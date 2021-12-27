@@ -6,5 +6,18 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10 (BugHub)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Chart.js" level="application" />
+    <orderEntry type="library" name="bootstrap" level="application" />
+  </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/app/bugs_board/templates" />
+        <option value="$MODULE_DIR$/app/dashboard/templates" />
+        <option value="$MODULE_DIR$/app/main_page/templates" />
+        <option value="$MODULE_DIR$/app/teams/templates" />
+        <option value="$MODULE_DIR$/app/user_home/templates" />
+      </list>
+    </option>
   </component>
 </module>

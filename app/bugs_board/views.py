@@ -175,22 +175,18 @@ def update_ticket(id):
 
         if owner_select is None:
             ticket.owner_id = ticket.owner_id
-        else:
-            try:
-                # split the input
-                select_split = owner_select.split()
-                # print("split:", select_split)
 
-                # grab first element for the ID
-                owner_id = select_split[0]
-                # print("owner_id:", owner_id)
+        if len(owner_select) > 0:
+            # split the input
+            select_split = owner_select.split()
+            # print("split:", select_split)
 
-                # query for the new owner and assign into new_owner variable
-                new_owner = User.query.filter_by(id=owner_id).first()
+            # grab first element for the ID
+            owner_id = select_split[0]
+            # print("owner_id:", owner_id)
 
-                ticket.owner_id = new_owner.id
-            except:
-                pass
+            # query for the new owner and assign into new_owner variable
+            new_owner = User.query.filter_by(id=owner_id).first()
 
         flash("Changes saved", category="success")
         db.session.commit()

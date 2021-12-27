@@ -92,7 +92,7 @@ def create_ticket():
         owner_id = user.id
         team_id = user.team_id
 
-        if len(title) < 1:
+        if len(title) < 4:
             flash("Title can not empty", category='error')
         elif len(ticket_description) < 1:
             flash("Description can not be blank", category='error')

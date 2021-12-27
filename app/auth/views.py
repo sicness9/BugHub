@@ -9,7 +9,7 @@ from flask import session, redirect, url_for, jsonify
 from authlib.integrations.flask_client import OAuth
 from six.moves.urllib.parse import urlencode
 
-from main import app
+from app.main import app
 from app import db
 from . import auth
 from ..utils import AuthError
@@ -71,14 +71,14 @@ def callback_handling():
         db.session.add(new_user)
         db.session.commit()
 
-    try:
-        # update the existing profile and flip invite status to accept
-        if user.invite_status == 1:
-            # invite status 2 means accepted
-            user.invite_status = 2
+    user = User.query.filter_by(email=userinfo['name']).first()
 
-            db.session.commit()
-    except:
+    # update the existing profile and flip invite status to accept
+    if user.invite_status == 1:
+        # invite status 2 means accepted
+        user.invite_status = 2
+        db.session.commit()
+    if user.invite_status is None:
         pass
 
     return redirect(url_for('user_home.init_profile'))
